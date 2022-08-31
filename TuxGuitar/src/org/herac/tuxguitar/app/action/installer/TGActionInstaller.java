@@ -534,7 +534,7 @@ public class TGActionInstaller {
 	public void installAction(TGActionBase action) {
 		String actionId = action.getName();
 		
-		TGActionManager.getInstance(this.manager.getContext()).mapAction(actionId, action);
+        TGActionManager.getInstance(this.manager.getContext()).mapAction(actionId, action);
 		TGActionConfig config = this.configMap.get(actionId);
 		if( config != null ) {
 			if( config.isShortcutAvailable() ) {
@@ -563,4 +563,10 @@ public class TGActionInstaller {
 			this.manager.getUndoableActionListener().getControllers().set(actionId, config.getUndoableController());
 		}
 	}
+
+    public void installAction(TGActionBase action, int flags) {
+        String actionId = action.getName();
+		this.configMap.map(actionId, flags);
+        installAction(action);
+    }
 }

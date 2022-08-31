@@ -32,5 +32,11 @@
 			<artifactId>tuxguitar-ui-toolkit</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>kevwargo.jlp</groupId>
+			<artifactId>jlp</artifactId>
+            <version>1.0.0</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 </project>

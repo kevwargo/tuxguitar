@@ -40,4 +40,6 @@ public final class TGDocumentContextAttributes {
 	public static final String ATTRIBUTE_POSITION = "position";
 	public static final String ATTRIBUTE_FRET = "fret";
 	public static final String ATTRIBUTE_VALUE = "value";
+
+    public static final String ATTRIBUTE_LISP_CONTEXT = "lisp-context";
 }

@@ -1,5 +1,6 @@
 package org.herac.tuxguitar.app;
 
+import java.net.InetAddress;
 import java.net.URL;
 
 import org.herac.tuxguitar.action.TGActionManager;
@@ -12,6 +13,7 @@ import org.herac.tuxguitar.app.action.impl.view.TGTogglePianoEditorAction;
 import org.herac.tuxguitar.app.action.impl.view.TGToggleTransportDialogAction;
 import org.herac.tuxguitar.app.document.TGDocumentListAttributes;
 import org.herac.tuxguitar.app.document.TGDocumentListManager;
+import org.herac.tuxguitar.app.lisp.TGLispProcessor;
 import org.herac.tuxguitar.app.synchronizer.TGSynchronizerControllerImpl;
 import org.herac.tuxguitar.app.system.config.TGConfigKeys;
 import org.herac.tuxguitar.app.system.config.TGConfigManager;
@@ -63,6 +65,8 @@ import org.herac.tuxguitar.util.error.TGErrorHandler;
 import org.herac.tuxguitar.util.error.TGErrorManager;
 import org.herac.tuxguitar.util.plugin.TGPluginManager;
 import org.herac.tuxguitar.util.properties.TGPropertiesManager;
+import java.net.UnknownHostException;
+
 
 public class TuxGuitar {
 	
@@ -144,11 +148,16 @@ public class TuxGuitar {
 		TGWindow.getInstance(TuxGuitar.this.context).open();
 		
 		this.startSong(url);
+        try {
+            TGLispProcessor.getInstance(context).start(InetAddress.getByAddress(new byte[] {127, 0, 0, 1}));
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
 		this.setInitialized(true);
 	}
 	
 	private void startSong(URL url){
-		TGDocumentListManager.getInstance(this.context).findCurrentDocument().setUnwanted(true);
+        TGDocumentListManager.getInstance(this.context).findCurrentDocument().setUnwanted(true);
 		if( url != null ){
 			TGActionProcessor tgActionProcessor = new TGActionProcessor(this.context, TGReadURLAction.NAME);
 			tgActionProcessor.setAttribute(TGReadURLAction.ATTRIBUTE_URL, url);

@@ -31,9 +31,13 @@ public class TGApplication {
 	
 	private UIApplicationFactory lookupApplication() {
 		Iterator<UIApplicationFactory> it = TGServiceReader.lookupProviders(UIApplicationFactory.class, TGResourceManager.getInstance(this.context));
+        UIApplicationFactory f = null;
 		if( it.hasNext() ){
-			return it.next();
+			f = it.next();
+            System.out.printf("factory class: %s\n", f.getClass().getName());
 		}
+        if (f != null)
+            return f;
 		throw new TGException("No implementation class found for: " + UIApplicationFactory.class.getName());
 	}
 	

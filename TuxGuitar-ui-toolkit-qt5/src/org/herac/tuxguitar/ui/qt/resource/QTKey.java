@@ -51,7 +51,9 @@ public class QTKey {
 		new QTKeyMap(Key.Key_Slash, new UIKey("/")),
 		new QTKeyMap(Key.Key_multiply, new UIKey("*")),
 		new QTKeyMap(Key.Key_Less, new UIKey("<")),
-		new QTKeyMap(Key.Key_Greater, new UIKey(">"))
+		new QTKeyMap(Key.Key_Greater, new UIKey(">")),
+		new QTKeyMap(Key.Key_Hyper_L, new UIKey("Hyper")),
+		new QTKeyMap(Key.Key_Hyper_R, new UIKey("Hyper"))
 	};
 	
 	public static UIKey getKey(QKeyEvent keyEvent) {

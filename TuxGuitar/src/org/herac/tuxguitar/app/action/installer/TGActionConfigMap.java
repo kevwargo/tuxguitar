@@ -588,7 +588,7 @@ public class TGActionConfigMap extends TGActionMap<TGActionConfig> {
 		this.map(TGOpenAboutDialogAction.NAME, LOCKABLE | SYNC_THREAD |SHORTCUT);
 	}
 	
-	private void map(String actionId, int flags) {
+    void map(String actionId, int flags) {
 		this.map(actionId, flags, UPDATE_ITEMS_CTL, null);
 	}
 	
