@@ -30,7 +30,7 @@ public class SetFretAction extends ActionFunction {
 
 
     public SetFretAction(TGContext context) {
-        super(context, NAME, new FormalArguments().pos("num"));
+        super(context, NAME, new FormalArguments("num"));
     }
 
     protected LispObject callAction(LispNamespace namespace, Map<String, LispObject> arguments, TGActionContext actionContext) throws LispException {

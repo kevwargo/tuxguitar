@@ -24,7 +24,7 @@ public class RunAction extends ActionFunction {
 
 
     public RunAction(TGContext context) {
-        super(context, NAME, new FormalArguments().pos(ARG_ACTION));
+        super(context, NAME, new FormalArguments(ARG_ACTION));
     }
 
     protected LispObject callAction(LispNamespace namespace, Map<String, LispObject> arguments, TGActionContext actionContext) throws LispException {

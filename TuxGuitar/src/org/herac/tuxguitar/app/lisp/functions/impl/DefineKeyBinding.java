@@ -32,7 +32,7 @@ public class DefineKeyBinding extends TGLispFunction {
     }
 
     private static FormalArguments buildArgs() {
-        return new FormalArguments().pos(ARG_KEYS).pos(ARG_ACTION).rest(ARG_ARGS);
+        return new FormalArguments(ARG_KEYS, ARG_ACTION).rest(ARG_ARGS);
     }
 
     protected LispObject callInternal(LispNamespace namespace, Map<String, LispObject> arguments) throws LispException {
