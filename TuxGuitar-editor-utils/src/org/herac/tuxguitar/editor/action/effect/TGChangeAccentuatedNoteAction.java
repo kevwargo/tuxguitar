@@ -9,18 +9,18 @@ import org.herac.tuxguitar.song.models.TGString;
 import org.herac.tuxguitar.util.TGContext;
 
 public class TGChangeAccentuatedNoteAction extends TGActionBase {
-	
+
 	public static final String NAME = "action.note.effect.change-accentuated";
-	
+
 	public TGChangeAccentuatedNoteAction(TGContext context) {
 		super(context, NAME);
 	}
-	
+
 	protected void processAction(TGActionContext context){
 		TGMeasure measure = ((TGMeasure) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_MEASURE));
 		TGBeat beat = ((TGBeat) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_BEAT));
 		TGString string = ((TGString) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_STRING));
-		
+
 		getSongManager(context).getMeasureManager().changeAccentuatedNote(measure, beat.getStart(), string.getNumber());
 	}
 }

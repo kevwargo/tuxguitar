@@ -39,7 +39,7 @@ import javax.sound.sampled.LineUnavailableException;
 
 /**
  * Clip implemention for the SoftMixingMixer.
- * 
+ *
  * @author Karl Helgason
  */
 public class SoftMixingClip extends SoftMixingDataLine implements Clip {

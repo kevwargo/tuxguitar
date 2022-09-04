@@ -7,13 +7,13 @@ import org.herac.tuxguitar.song.models.TGBeat;
 import org.herac.tuxguitar.util.TGContext;
 
 public class TGCleanBeatAction extends TGActionBase {
-	
+
 	public static final String NAME = "action.note.general.clean-beat";
-	
+
 	public TGCleanBeatAction(TGContext context) {
 		super(context, NAME);
 	}
-	
+
 	protected void processAction(TGActionContext context){
 		TGBeat beat = ((TGBeat) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_BEAT));
 		if( beat != null ){

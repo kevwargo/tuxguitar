@@ -48,7 +48,7 @@ public class TGTempoDialog extends TGModalFragment {
 		TGTempo tempo = this.getHeader().getTempo();
 		ArrayAdapter<Integer> arrayAdapter = new ArrayAdapter<Integer>(getActivity(), android.R.layout.simple_spinner_item, createTempoValues());
 		arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		
+
 		Spinner spinner = (Spinner) this.getView().findViewById(R.id.tempo_dlg_tempo_value);
 		spinner.setAdapter(arrayAdapter);
 		spinner.setSelection(arrayAdapter.getPosition(Integer.valueOf(tempo.getValue())));
@@ -58,7 +58,7 @@ public class TGTempoDialog extends TGModalFragment {
 		this.updateRadio((RadioButton) this.getView().findViewById(R.id.tempo_dlg_options_apply_to_end), TGChangeTempoRangeAction.APPLY_TO_END, applyToDefault);
 		this.updateRadio((RadioButton) this.getView().findViewById(R.id.tempo_dlg_options_apply_to_next_marker), TGChangeTempoRangeAction.APPLY_TO_NEXT, applyToDefault);
 	}
-	
+
 	public Integer[] createTempoValues() {
 		int length = ((TGChangeTempoRangeAction.MAX_TEMPO - TGChangeTempoRangeAction.MIN_TEMPO) + 1);
 		Integer[] items = new Integer[length];

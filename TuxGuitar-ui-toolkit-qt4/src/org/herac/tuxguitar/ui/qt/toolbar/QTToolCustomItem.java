@@ -31,38 +31,38 @@ import org.herac.tuxguitar.ui.widget.UIControl;
 import com.trolltech.qt.gui.QWidget;
 
 public class QTToolCustomItem extends QTToolItem<QWidget> implements QTContainer, UIToolCustomItem {
-	
+
 	private QTWidget<? extends QWidget> control;
-	
+
 	public QTToolCustomItem(QTToolBar parent) {
 		super(new QWidget(), parent);
-		
+
 		this.setLayoutAttribute(QTToolBar.MANAGED, true);
 	}
-	
+
 	public QWidget getContainerControl() {
 		return this.getControl();
 	}
-	
+
 	public <T extends Object> void setLayoutAttribute(String key, T value) {
 		this.getToolBar().set(this, key, value);
 	}
-	
+
 	public <T extends Object> T getLayoutAttribute(String key){
 		return this.getToolBar().get(this, key);
 	}
-	
+
 	public void addChild(QTWidget<? extends QWidget> uiControl) {
 		if( this.control != null ) {
 			this.removeChild(this.control);
 		}
 		this.control = uiControl;
 	}
-	
+
 	public void removeChild(QTWidget<? extends QWidget> uiControl) {
 		this.control = null;
 	}
-	
+
 	public List<UIControl> getChildren() {
 		List<UIControl> children = new ArrayList<UIControl>();
 		if( this.control != null ) {
@@ -70,20 +70,20 @@ public class QTToolCustomItem extends QTToolItem<QWidget> implements QTContainer
 		}
 		return children;
 	}
-	
+
 	public void computePackedSize(Float fixedWidth, Float fixedHeight) {
 		UISize packedSize = new UISize();
-		
+
 		Float packedWidth = (fixedWidth != null ? fixedWidth : (Float) this.getLayoutAttribute(PACKED_WIDTH));
 		Float minimumPackedWidth = this.getLayoutAttribute(MINIMUM_PACKED_WIDTH);
 		Float maximumPackedWidth = this.getLayoutAttribute(MAXIMUM_PACKED_WIDTH);
 		if( this.control != null ) {
 			this.control.computePackedSize(packedWidth, fixedHeight);
-			
+
 			packedSize.setWidth(this.control.getPackedSize().getWidth());
 			packedSize.setHeight(this.control.getPackedSize().getHeight());
 		}
-		
+
 		if( packedWidth != null ) {
 			packedSize.setWidth(packedWidth);
 		}
@@ -96,13 +96,13 @@ public class QTToolCustomItem extends QTToolItem<QWidget> implements QTContainer
 		if( fixedHeight != null ) {
 			packedSize.setHeight(fixedHeight);
 		}
-		
+
 		this.setPackedSize(packedSize);
 	}
-	
+
 	public void setBounds(UIRectangle bounds) {
 		super.setBounds(bounds);
-		
+
 		if( this.control != null ) {
 			this.control.setBounds(new UIRectangle(bounds.getSize()));
 		}
@@ -133,39 +133,39 @@ public class QTToolCustomItem extends QTToolItem<QWidget> implements QTContainer
 			this.control.setFgColor(color);
 		}
 	}
-	
+
 	public UIFont getFont() {
 		if( this.control != null ) {
 			return this.control.getFont();
 		}
 		return null;
 	}
-	
+
 	public void setFont(UIFont font) {
 		if( this.control != null ) {
 			this.control.setFont(font);
 		}
 	}
-	
+
 	public UICursor getCursor() {
 		if( this.control != null ) {
 			return this.control.getCursor();
 		}
 		return null;
 	}
-	
+
 	public void setCursor(UICursor cursor) {
 		if( this.control != null ) {
 			this.control.setCursor(cursor);
 		}
 	}
-	
+
 	public void setFocus() {
 		if( this.control != null ) {
 			this.control.setFocus();
 		}
 	}
-	
+
 	public void redraw() {
 		if( this.control != null ) {
 			this.control.redraw();
@@ -184,28 +184,28 @@ public class QTToolCustomItem extends QTToolItem<QWidget> implements QTContainer
 			this.control.setPopupMenu(menu);
 		}
 	}
-	
+
 	public <Data> Data getData(String key) {
 		if( this.control != null ) {
 			this.control.getData(key);
 		}
 		return null;
 	}
-	
+
 	public <Data> void setData(String key, Data data) {
 		if( this.control != null ) {
 			this.control.setData(key, data);
 		}
 	}
-	
+
 	public void dispose() {
 		if( this.control != null ) {
 			this.control.dispose();
 		}
-		
+
 		super.dispose();
 	}
-	
+
 	public void addDisposeListener(UIDisposeListener listener) {
 		if( this.control != null ) {
 			this.control.addDisposeListener(listener);
@@ -217,7 +217,7 @@ public class QTToolCustomItem extends QTToolItem<QWidget> implements QTContainer
 			this.control.removeDisposeListener(listener);
 		}
 	}
-	
+
 	public void addResizeListener(UIResizeListener listener) {
 		if( this.control != null ) {
 			this.control.addResizeListener(listener);
@@ -229,7 +229,7 @@ public class QTToolCustomItem extends QTToolItem<QWidget> implements QTContainer
 			this.control.removeResizeListener(listener);
 		}
 	}
-	
+
 	public void addMouseUpListener(UIMouseUpListener listener) {
 		if( this.control != null ) {
 			this.control.addMouseUpListener(listener);
@@ -289,7 +289,7 @@ public class QTToolCustomItem extends QTToolItem<QWidget> implements QTContainer
 			this.control.removeMouseDragListener(listener);
 		}
 	}
-	
+
 	public void addMouseWheelListener(UIMouseWheelListener listener) {
 		if( this.control != null ) {
 			this.control.addMouseWheelListener(listener);
@@ -301,7 +301,7 @@ public class QTToolCustomItem extends QTToolItem<QWidget> implements QTContainer
 			this.control.removeMouseWheelListener(listener);
 		}
 	}
-	
+
 	public void addMouseEnterListener(UIMouseEnterListener listener) {
 		if( this.control != null ) {
 			this.control.addMouseEnterListener(listener);
@@ -313,7 +313,7 @@ public class QTToolCustomItem extends QTToolItem<QWidget> implements QTContainer
 			this.control.removeMouseEnterListener(listener);
 		}
 	}
-	
+
 	public void addMouseExitListener(UIMouseExitListener listener) {
 		if( this.control != null ) {
 			this.control.addMouseExitListener(listener);
@@ -325,7 +325,7 @@ public class QTToolCustomItem extends QTToolItem<QWidget> implements QTContainer
 			this.control.removeMouseExitListener(listener);
 		}
 	}
-	
+
 	public void addKeyPressedListener(UIKeyPressedListener listener) {
 		if( this.control != null ) {
 			this.control.addKeyPressedListener(listener);
@@ -337,7 +337,7 @@ public class QTToolCustomItem extends QTToolItem<QWidget> implements QTContainer
 			this.control.removeKeyPressedListener(listener);
 		}
 	}
-	
+
 	public void addKeyReleasedListener(UIKeyReleasedListener listener) {
 		if( this.control != null ) {
 			this.control.addKeyReleasedListener(listener);
@@ -349,7 +349,7 @@ public class QTToolCustomItem extends QTToolItem<QWidget> implements QTContainer
 			this.control.removeKeyReleasedListener(listener);
 		}
 	}
-	
+
 	public void addFocusGainedListener(UIFocusGainedListener listener) {
 		if( this.control != null ) {
 			this.control.addFocusGainedListener(listener);
@@ -361,7 +361,7 @@ public class QTToolCustomItem extends QTToolItem<QWidget> implements QTContainer
 			this.control.removeFocusGainedListener(listener);
 		}
 	}
-	
+
 	public void addFocusLostListener(UIFocusLostListener listener) {
 		if( this.control != null ) {
 			this.control.addFocusLostListener(listener);

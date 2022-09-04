@@ -11,29 +11,29 @@ import com.trolltech.qt.gui.QColorDialog;
 import com.trolltech.qt.gui.QDialog;
 
 public class QTColorChooser implements UIColorChooser {
-	
+
 	private QTAbstractWindow<?> window;
 	private String text;
 	private UIColorModel defaultModel;
-	
+
 	public QTColorChooser(QTAbstractWindow<?> window) {
 		this.window = window;
 	}
-	
+
 	public void choose(UIColorChooserHandler selectionHandler) {
 		UIColorModel selection = null;
-		
+
 		QColorDialog dlg = new QColorDialog(this.window.getControl());
 		if( this.text != null ) {
 			dlg.setWindowTitle(this.text);
 		}
-		
+
 		QColor defaultColor = null;
 		if( this.defaultModel != null ) {
 			defaultColor = new QTColor(this.defaultModel).getControl();
 			dlg.setCurrentColor(defaultColor);
 		}
-		
+
 		if( dlg.exec() == QDialog.DialogCode.Accepted.value() ) {
 			QColor color = dlg.selectedColor();
 			if( color != null ) {
@@ -48,7 +48,7 @@ public class QTColorChooser implements UIColorChooser {
 		}
 		selectionHandler.onSelectColor(selection);
 	}
-	
+
 	public void setText(String text) {
 		this.text = text;
 	}

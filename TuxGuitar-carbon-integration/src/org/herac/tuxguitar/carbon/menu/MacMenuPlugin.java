@@ -10,9 +10,9 @@ import org.herac.tuxguitar.util.plugin.TGPlugin;
 import org.herac.tuxguitar.util.plugin.TGPluginException;
 
 public class MacMenuPlugin implements TGPlugin {
-	
+
 	private MacMenu macMenu;
-	
+
 	public void setEnabled(TGContext context, boolean enabled) throws TGPluginException {
 		if( this.macMenu != null ){
 			this.macMenu.setEnabled(enabled);
@@ -26,7 +26,7 @@ public class MacMenuPlugin implements TGPlugin {
 	public String getModuleId() {
 		return TGCarbonIntegrationPlugin.MODULE_ID;
 	}
-	
+
 	public void connect(TGContext context) throws TGPluginException {
 		this.setEnabled(context, true);
 	}

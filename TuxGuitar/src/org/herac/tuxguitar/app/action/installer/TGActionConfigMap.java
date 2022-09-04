@@ -286,34 +286,34 @@ import org.herac.tuxguitar.editor.undo.impl.track.TGUndoableTrackLyricsControlle
 import org.herac.tuxguitar.editor.undo.impl.track.TGUndoableTrackSoloMuteController;
 
 public class TGActionConfigMap extends TGActionMap<TGActionConfig> {
-	
+
 	public static final int LOCKABLE = 0x01;
 	public static final int SYNC_THREAD = 0x02;
 	public static final int SHORTCUT = 0x04;
 	public static final int DISABLE_ON_PLAY = 0x08;
 	public static final int STOP_TRANSPORT = 0x10;
 	public static final int SAVE_BEFORE = 0x20;
-	
+
 	private static final TGUpdateController UPDATE_ITEMS_CTL = new TGUpdateItemsController();
 	private static final TGUpdateController UPDATE_MEASURE_CTL = new TGUpdateMeasureController();
 	private static final TGUpdateController UPDATE_SONG_CTL = new TGUpdateSongController();
 	private static final TGUpdateController UPDATE_SONG_LOADED_CTL = new TGUpdateLoadedSongController();
 	private static final TGUpdateController UPDATE_SONG_SAVED_CTL = new TGUpdateSavedSongController();
 	private static final TGUpdateController UPDATE_CHANNELS_CTL = new TGUpdateChannelsController();
-	
+
 	private static final TGUndoableActionController UNDOABLE_SONG_GENERIC = new TGUndoableSongGenericController();
 	private static final TGUndoableActionController UNDOABLE_MEASURE_GENERIC = new TGUndoableMeasureGenericController();
 	private static final TGUndoableActionController UNDOABLE_TRACK_GENERIC = new TGUndoableTrackGenericController();
 	private static final TGUndoableActionController UNDOABLE_CHANNEL_GENERIC = new TGUndoableChannelGenericController();
-	
+
 	public TGActionConfigMap() {
 		this.createConfigMap();
 	}
-	
+
 	public void createConfigMap() {
 		//system actions
 		this.map(TGDisposeAction.NAME, LOCKABLE | SYNC_THREAD | SAVE_BEFORE);
-		
+
 		//file actions
 		this.map(TGLoadSongAction.NAME, LOCKABLE | STOP_TRANSPORT, UPDATE_SONG_LOADED_CTL);
 		this.map(TGNewSongAction.NAME, LOCKABLE | STOP_TRANSPORT | SHORTCUT);
@@ -335,7 +335,7 @@ public class TGActionConfigMap extends TGActionMap<TGActionConfig> {
 		this.map(TGExitAction.NAME, LOCKABLE | SYNC_THREAD);
 		this.map(TGPrintAction.NAME, LOCKABLE | SHORTCUT);
 		this.map(TGPrintPreviewAction.NAME, LOCKABLE | SHORTCUT);
-		
+
 		//edit actions
 		this.map(TGUndoAction.NAME, LOCKABLE | DISABLE_ON_PLAY | SHORTCUT);
 		this.map(TGRedoAction.NAME, LOCKABLE | DISABLE_ON_PLAY | SHORTCUT);
@@ -344,24 +344,24 @@ public class TGActionConfigMap extends TGActionMap<TGActionConfig> {
 		this.map(TGSetNaturalKeyAction.NAME, LOCKABLE | DISABLE_ON_PLAY | SHORTCUT);
 		this.map(TGSetVoice1Action.NAME, LOCKABLE | DISABLE_ON_PLAY | SHORTCUT);
 		this.map(TGSetVoice2Action.NAME, LOCKABLE | DISABLE_ON_PLAY | SHORTCUT);
-		
+
 		//tablature actions
 		this.map(TGMouseClickAction.NAME, LOCKABLE);
 		this.map(TGMouseMoveAction.NAME, LOCKABLE | DISABLE_ON_PLAY, new TGUpdateItemsOnSuccessController());
 		this.map(TGMouseExitAction.NAME, LOCKABLE | DISABLE_ON_PLAY);
 		this.map(TGMenuShownAction.NAME, LOCKABLE);
-		
+
 		//caret actions
 		this.map(TGMoveToAction.NAME, LOCKABLE, new TGUpdateTransportPositionController());
 		this.map(TGGoRightAction.NAME, LOCKABLE | DISABLE_ON_PLAY | SHORTCUT);
 		this.map(TGGoLeftAction.NAME, LOCKABLE | DISABLE_ON_PLAY | SHORTCUT);
 		this.map(TGGoUpAction.NAME, LOCKABLE | DISABLE_ON_PLAY | SHORTCUT);
 		this.map(TGGoDownAction.NAME, LOCKABLE | DISABLE_ON_PLAY | SHORTCUT);
-		
+
 		//song actions
 		this.map(TGCopySongFromAction.NAME, LOCKABLE, UPDATE_SONG_CTL, UNDOABLE_SONG_GENERIC);
 		this.map(TGClearSongAction.NAME, LOCKABLE | DISABLE_ON_PLAY);
-		
+
 		//track actions
 		this.map(TGAddNewTrackAction.NAME, LOCKABLE | DISABLE_ON_PLAY | SHORTCUT, new TGUpdateAddedTrackController(), new TGUndoableAddTrackController());
 		this.map(TGAddTrackAction.NAME, LOCKABLE | DISABLE_ON_PLAY, new TGUpdateAddedTrackController(), new TGUndoableAddTrackController());
@@ -386,7 +386,7 @@ public class TGActionConfigMap extends TGActionMap<TGActionConfig> {
 		this.map(TGCopyTrackFromAction.NAME, LOCKABLE | DISABLE_ON_PLAY, UPDATE_SONG_CTL, UNDOABLE_TRACK_GENERIC);
 		this.map(TGSetTrackLyricsAction.NAME, LOCKABLE | DISABLE_ON_PLAY, UPDATE_ITEMS_CTL, new TGUndoableTrackLyricsController());
 		this.map(TGChangeTrackPropertiesAction.NAME, LOCKABLE | DISABLE_ON_PLAY);
-		
+
 		//measure actions
 		this.map(TGAddMeasureAction.NAME, LOCKABLE | DISABLE_ON_PLAY, new TGUpdateAddedMeasureController(), new TGUndoableAddMeasureController());
 		this.map(TGAddMeasureListAction.NAME, LOCKABLE | DISABLE_ON_PLAY);
@@ -402,7 +402,7 @@ public class TGActionConfigMap extends TGActionMap<TGActionConfig> {
 		this.map(TGInsertMeasuresAction.NAME, LOCKABLE | DISABLE_ON_PLAY, UPDATE_SONG_CTL, UNDOABLE_SONG_GENERIC);
 		this.map(TGCopyMeasureAction.NAME, LOCKABLE |DISABLE_ON_PLAY);
 		this.map(TGPasteMeasureAction.NAME, LOCKABLE | DISABLE_ON_PLAY, UPDATE_SONG_CTL, UNDOABLE_SONG_GENERIC);
-		
+
 		//beat actions
 		this.map(TGChangeNoteAction.NAME, LOCKABLE | DISABLE_ON_PLAY, new TGUpdateModifiedNoteController(), UNDOABLE_MEASURE_GENERIC);
 		this.map(TGChangeTiedNoteAction.NAME, LOCKABLE | DISABLE_ON_PLAY | SHORTCUT, UPDATE_MEASURE_CTL, UNDOABLE_MEASURE_GENERIC);
@@ -430,7 +430,7 @@ public class TGActionConfigMap extends TGActionMap<TGActionConfig> {
 		for( int i = 0 ; i < 10 ; i ++ ){
 			this.map(TGSetNoteFretNumberAction.getActionName(i), LOCKABLE | DISABLE_ON_PLAY | SHORTCUT);
 		}
-		
+
 		//effect actions
 		this.map(TGChangeAccentuatedNoteAction.NAME, LOCKABLE | DISABLE_ON_PLAY | SHORTCUT, UPDATE_MEASURE_CTL, UNDOABLE_MEASURE_GENERIC);
 		this.map(TGChangeBendNoteAction.NAME, LOCKABLE | DISABLE_ON_PLAY, UPDATE_MEASURE_CTL, UNDOABLE_MEASURE_GENERIC);
@@ -452,7 +452,7 @@ public class TGActionConfigMap extends TGActionMap<TGActionConfig> {
 		this.map(TGChangeTremoloPickingAction.NAME, LOCKABLE | DISABLE_ON_PLAY, UPDATE_MEASURE_CTL, UNDOABLE_MEASURE_GENERIC);
 		this.map(TGChangeTrillNoteAction.NAME, LOCKABLE | DISABLE_ON_PLAY, UPDATE_MEASURE_CTL, UNDOABLE_MEASURE_GENERIC);
 		this.map(TGChangeVibratoNoteAction.NAME, LOCKABLE | DISABLE_ON_PLAY | SHORTCUT, UPDATE_MEASURE_CTL, UNDOABLE_MEASURE_GENERIC);
-		
+
 		//duration actions
 		this.map(TGSetDurationAction.NAME, LOCKABLE | DISABLE_ON_PLAY, new TGUpdateModifiedDurationController(), UNDOABLE_MEASURE_GENERIC);
 		this.map(TGSetWholeDurationAction.NAME, LOCKABLE | DISABLE_ON_PLAY | SHORTCUT);
@@ -474,20 +474,20 @@ public class TGActionConfigMap extends TGActionMap<TGActionConfig> {
 		this.map(TGChangeTimeSignatureAction.NAME, LOCKABLE | DISABLE_ON_PLAY, UPDATE_SONG_CTL, new TGUndoableTimeSignatureController());
 		this.map(TGChangeKeySignatureAction.NAME, LOCKABLE | DISABLE_ON_PLAY, UPDATE_SONG_CTL, new TGUndoableKeySignatureController());
 		this.map(TGChangeTripletFeelAction.NAME, LOCKABLE | DISABLE_ON_PLAY, UPDATE_SONG_CTL, new TGUndoableTripletFeelController());
-		
+
 		//composition actions
 		this.map(TGChangeInfoAction.NAME, LOCKABLE | DISABLE_ON_PLAY, new TGUpdateSongInfoController(), new TGUndoableSongInfoController());
 		this.map(TGRepeatOpenAction.NAME, LOCKABLE | DISABLE_ON_PLAY, UPDATE_MEASURE_CTL, new TGUndoableOpenRepeatController());
 		this.map(TGRepeatCloseAction.NAME, LOCKABLE | DISABLE_ON_PLAY, UPDATE_MEASURE_CTL, new TGUndoableCloseRepeatController());
 		this.map(TGRepeatAlternativeAction.NAME, LOCKABLE | DISABLE_ON_PLAY, UPDATE_MEASURE_CTL, new TGUndoableAltRepeatController());
-		
+
 		//channel actions
 		this.map(TGSetChannelsAction.NAME, LOCKABLE | DISABLE_ON_PLAY, UPDATE_CHANNELS_CTL, UNDOABLE_CHANNEL_GENERIC);
 		this.map(TGAddChannelAction.NAME, LOCKABLE | DISABLE_ON_PLAY, UPDATE_CHANNELS_CTL, UNDOABLE_CHANNEL_GENERIC);
 		this.map(TGAddNewChannelAction.NAME, LOCKABLE | DISABLE_ON_PLAY, UPDATE_CHANNELS_CTL, UNDOABLE_CHANNEL_GENERIC);
 		this.map(TGRemoveChannelAction.NAME, LOCKABLE | DISABLE_ON_PLAY, UPDATE_CHANNELS_CTL, UNDOABLE_CHANNEL_GENERIC);
 		this.map(TGUpdateChannelAction.NAME, LOCKABLE, new TGUpdateModifiedChannelController(), new TGUndoableModifyChannelController());
-		
+
 		//transport actions
 		this.map(TGTransportPlayAction.NAME, LOCKABLE | SHORTCUT);
 		this.map(TGTransportStopAction.NAME, LOCKABLE | SHORTCUT);
@@ -496,7 +496,7 @@ public class TGActionConfigMap extends TGActionMap<TGActionConfig> {
 		this.map(TGTransportModeAction.NAME, LOCKABLE);
 		this.map(TGTransportSetLoopSHeaderAction.NAME, LOCKABLE | SHORTCUT);
 		this.map(TGTransportSetLoopEHeaderAction.NAME, LOCKABLE | SHORTCUT);
-		
+
 		//marker actions
 		this.map(TGUpdateMarkerAction.NAME, LOCKABLE, new TGUpdateModifiedMarkerController(), new TGUndoableMarkerGenericController());
 		this.map(TGRemoveMarkerAction.NAME, LOCKABLE, new TGUpdateModifiedMarkerController(), new TGUndoableMarkerGenericController());
@@ -506,7 +506,7 @@ public class TGActionConfigMap extends TGActionMap<TGActionConfig> {
 		this.map(TGGoNextMarkerAction.NAME, LOCKABLE | SHORTCUT);
 		this.map(TGGoFirstMarkerAction.NAME, LOCKABLE | SHORTCUT);
 		this.map(TGGoLastMarkerAction.NAME, LOCKABLE | SHORTCUT);
-		
+
 		//layout actions
 		this.map(TGSetPageLayoutAction.NAME, LOCKABLE | SYNC_THREAD | SHORTCUT, UPDATE_SONG_CTL);
 		this.map(TGSetLinearLayoutAction.NAME, LOCKABLE | SYNC_THREAD | SHORTCUT, UPDATE_SONG_CTL);
@@ -516,18 +516,18 @@ public class TGActionConfigMap extends TGActionMap<TGActionConfig> {
 		this.map(TGSetCompactViewAction.NAME, LOCKABLE | SHORTCUT, UPDATE_SONG_CTL);
 		this.map(TGSetChordNameEnabledAction.NAME, LOCKABLE | SHORTCUT, UPDATE_SONG_CTL);
 		this.map(TGSetChordDiagramEnabledAction.NAME, LOCKABLE | SHORTCUT, UPDATE_SONG_CTL);
-		
+
 		this.map(TGSetLayoutScaleAction.NAME, LOCKABLE | SYNC_THREAD, UPDATE_SONG_CTL);
 		this.map(TGSetLayoutScaleIncrementAction.NAME, LOCKABLE | SYNC_THREAD, UPDATE_SONG_CTL);
 		this.map(TGSetLayoutScaleDecrementAction.NAME, LOCKABLE | SYNC_THREAD, UPDATE_SONG_CTL);
 		this.map(TGSetLayoutScaleResetAction.NAME, LOCKABLE | SYNC_THREAD, UPDATE_SONG_CTL);
-		
+
 		//tools
 		this.map(TGSelectScaleAction.NAME, LOCKABLE);
 		this.map(TGTransposeAction.NAME, LOCKABLE | DISABLE_ON_PLAY, UPDATE_SONG_CTL, UNDOABLE_SONG_GENERIC);
 		this.map(TGShowExternalBeatAction.NAME, LOCKABLE);
 		this.map(TGHideExternalBeatAction.NAME, LOCKABLE);
-		
+
 		//settings
 		this.map(TGReloadSettingsAction.NAME, LOCKABLE, UPDATE_SONG_CTL);
 		this.map(TGReloadTitleAction.NAME, LOCKABLE | SYNC_THREAD, UPDATE_SONG_CTL);
@@ -539,7 +539,7 @@ public class TGActionConfigMap extends TGActionMap<TGActionConfig> {
 		this.map(TGOpenSettingsEditorAction.NAME, LOCKABLE | SYNC_THREAD | SHORTCUT);
 		this.map(TGOpenKeyBindingEditorAction.NAME, LOCKABLE | SYNC_THREAD | SHORTCUT);
 		this.map(TGOpenPluginListDialogAction.NAME, LOCKABLE | SYNC_THREAD | SHORTCUT);
-		
+
 		//gui actions
 		this.map(TGOpenViewAction.NAME, LOCKABLE | SYNC_THREAD);
 		this.map(TGToggleViewAction.NAME, LOCKABLE | SYNC_THREAD);
@@ -587,15 +587,15 @@ public class TGActionConfigMap extends TGActionMap<TGActionConfig> {
 		this.map(TGOpenDocumentationDialogAction.NAME, LOCKABLE | SYNC_THREAD |SHORTCUT);
 		this.map(TGOpenAboutDialogAction.NAME, LOCKABLE | SYNC_THREAD |SHORTCUT);
 	}
-	
+
     void map(String actionId, int flags) {
 		this.map(actionId, flags, UPDATE_ITEMS_CTL, null);
 	}
-	
+
 	private void map(String actionId, int flags, TGUpdateController updateController) {
 		this.map(actionId, flags, updateController, null);
 	}
-	
+
 	private void map(String actionId, int flags, TGUpdateController updateController, TGUndoableActionController undoableController) {
 		TGActionConfig tgActionConfig = new TGActionConfig();
 		tgActionConfig.setUpdateController(updateController);
@@ -607,7 +607,7 @@ public class TGActionConfigMap extends TGActionMap<TGActionConfig> {
 		tgActionConfig.setSyncThread((flags & SYNC_THREAD) != 0);
 		tgActionConfig.setUnsavedInterceptor((flags & SAVE_BEFORE) != 0);
 		tgActionConfig.setDocumentModifier(undoableController != null);
-		
+
 		this.set(actionId, tgActionConfig);
 	}
 }

@@ -4,7 +4,7 @@ import org.herac.tuxguitar.ui.resource.UIColorModel;
 import org.herac.tuxguitar.ui.resource.UIFontModel;
 
 public class TGLayoutStyles {
-	
+
 	private boolean bufferEnabled;
 	private boolean tabNotePathRendererEnabled;
 	private float minBufferSeparator;
@@ -51,7 +51,7 @@ public class TGLayoutStyles {
 	private UIColorModel loopSMarkerColor;
 	private UIColorModel loopEMarkerColor;
 	private UIColorModel measureNumberColor;
-	
+
 	public TGLayoutStyles() {
 		super();
 	}
@@ -287,7 +287,7 @@ public class TGLayoutStyles {
 	public void setDurationWidths(float[] durationWidths) {
 		this.durationWidths = durationWidths;
 	}
-	
+
 	public UIFontModel getDefaultFont() {
 		return defaultFont;
 	}

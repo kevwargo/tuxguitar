@@ -23,13 +23,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 public class KeyBindingWriter {
-	
+
 	private static final String SHORTCUT_ROOT = "shortcuts";
 	private static final String SHORTCUT_TAG = "shortcut";
 	private static final String SHORTCUT_ATTRIBUTE_ACTION = "action";
 	private static final String SHORTCUT_ATTRIBUTE_KEYS = "keys";
 	private static final String KEY_SEPARATOR = " ";
-	
+
 	public static void setBindings(List<KeyBindingAction> list,String fileName) {
 		try{
 			File file = new File(fileName);
@@ -40,7 +40,7 @@ public class KeyBindingWriter {
 			throwable.printStackTrace();
 		}
 	}
-	
+
 	public static Document createDocument() {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -52,11 +52,11 @@ public class KeyBindingWriter {
 		}
 		return null;
 	}
-	
+
 	public static void saveDocument(Document document,File file) {
 		try {
 			FileOutputStream fs = new FileOutputStream(file);
-			
+
 			// Write it out again
 			TransformerFactory xformFactory = TransformerFactory.newInstance();
 			Transformer idTransform = xformFactory.newTransformer();
@@ -68,35 +68,35 @@ public class KeyBindingWriter {
 			throwable.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Write shortcuts to xml file
-	 * 
+	 *
 	 * @param shortcutsNode
 	 * @return
 	 */
 	private static void setBindings(List<KeyBindingAction> list,Document document){
 		Node shortcutsNode = document.createElement(SHORTCUT_ROOT);
-		
+
 		Iterator<KeyBindingAction> it = list.iterator();
 		while(it.hasNext()){
 			KeyBindingAction keyBindingAction = (KeyBindingAction) it.next();
-			
+
 			Node node = document.createElement(SHORTCUT_TAG);
 			shortcutsNode.appendChild(node);
-			
+
 			Attr attrKeys = document.createAttribute(SHORTCUT_ATTRIBUTE_KEYS);
 			Attr attrAction = document.createAttribute(SHORTCUT_ATTRIBUTE_ACTION);
-			
+
 			attrKeys.setNodeValue(toString(keyBindingAction.getCombination()));
 			attrAction.setNodeValue(keyBindingAction.getAction());
-			
+
 			node.getAttributes().setNamedItem(attrKeys);
 			node.getAttributes().setNamedItem(attrAction);
 		}
 		document.appendChild(shortcutsNode);
 	}
-	
+
 	private static String toString(UIKeyCombination combination) {
 		StringBuffer fullMask = new StringBuffer();
 		for(UIKey key : combination.getKeys()){

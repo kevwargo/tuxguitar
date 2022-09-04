@@ -6,13 +6,13 @@ import org.herac.tuxguitar.editor.undo.TGUndoableBuffer;
 import org.herac.tuxguitar.song.models.TGSong;
 
 public class TGDocument {
-	
+
 	private URI uri;
 	private TGSong song;
 	private TGUndoableBuffer undoableBuffer;
 	private boolean unsaved;
 	private boolean unwanted;
-	
+
 	public TGDocument() {
 		super();
 	}

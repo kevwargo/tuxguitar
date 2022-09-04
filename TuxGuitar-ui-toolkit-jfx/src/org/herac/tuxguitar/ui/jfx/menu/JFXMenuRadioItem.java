@@ -5,7 +5,7 @@ import javafx.scene.control.RadioMenuItem;
 import org.herac.tuxguitar.ui.menu.UIMenuCheckableItem;
 
 public class JFXMenuRadioItem extends JFXMenuActionItem implements UIMenuCheckableItem {
-	
+
 	public JFXMenuRadioItem(JFXMenuItemContainer parent) {
 		super(new RadioMenuItem(), parent);
 	}

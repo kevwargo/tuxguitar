@@ -2,7 +2,7 @@ package org.herac.tuxguitar.graphics.control;
 
 
 public class TGTrackSpacing extends TGSpacing {
-	
+
 	/***     POSITIONS ARRAY INDICES     ***/
 	public static final int POSITION_TOP = 0;
 	public static final int POSITION_LOOP_MARKER = 1;
@@ -21,7 +21,7 @@ public class TGTrackSpacing extends TGSpacing {
 	public static final int POSITION_TABLATURE = 14;
 	public static final int POSITION_LYRIC = 15;
 	public static final int POSITION_BOTTOM = 16;
-	
+
 	private static final int[][] POSITIONS = new int[][]{
 		/** SCORE **/
 		new int[]{
@@ -43,7 +43,7 @@ public class TGTrackSpacing extends TGSpacing {
 				15, //POSITION_LYRIC
 				16, //POSITION_BOTTOM
 			},
-			
+
 		/** TABLATURE **/
 		new int[]{
 				0,  //POSITION_TOP
@@ -64,7 +64,7 @@ public class TGTrackSpacing extends TGSpacing {
 				12, //POSITION_LYRIC
 				13, //POSITION_BOTTOM
 			},
-			
+
 		/** SCORE | TABLATURE **/
 		new int[]{
 				0,  //POSITION_TOP
@@ -86,7 +86,7 @@ public class TGTrackSpacing extends TGSpacing {
 				16, //POSITION_BOTTOM
 			},
 	};
-	
+
 	public TGTrackSpacing(TGLayout layout){
 		super( layout , POSITIONS , 16);
 	}

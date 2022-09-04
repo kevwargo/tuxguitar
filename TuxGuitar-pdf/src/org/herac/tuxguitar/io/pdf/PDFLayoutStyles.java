@@ -7,7 +7,7 @@ import org.herac.tuxguitar.ui.resource.UIFontModel;
 import com.itextpdf.text.pdf.BaseFont;
 
 public class PDFLayoutStyles extends TGLayoutStyles {
-	
+
 	public PDFLayoutStyles() {
 		this.setBufferEnabled(false);
 		this.setFirstMeasureSpacing(15);
@@ -34,7 +34,7 @@ public class PDFLayoutStyles extends TGLayoutStyles {
 		this.setClefSpacing(30f);
 		this.setKeySignatureSpacing(15f);
 		this.setTimeSignatureSpacing(15f);
-		
+
 		this.setLineWidths(new float[] {0, 1, 2, 3, 4, 5});
 		this.setDurationWidths(new float[] {18f, 18f, 16f, 15f, 14f});
 		this.setDefaultFont(new UIFontModel(BaseFont.TIMES_ROMAN, 8, false, false));

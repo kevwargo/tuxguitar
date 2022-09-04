@@ -11,23 +11,23 @@ import org.herac.tuxguitar.song.models.TGVoice;
 import org.herac.tuxguitar.util.TGContext;
 
 public class TGDeleteNoteOrRestAction extends TGActionBase {
-	
+
 	public static final String NAME = "action.beat.general.delete-note-or-rest";
-	
+
 	public TGDeleteNoteOrRestAction(TGContext context) {
 		super(context, NAME);
 	}
-	
+
 	protected void processAction(TGActionContext context){
 		TGSongManager songManager = getSongManager(context);
 		TGBeat beat = ((TGBeat) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_BEAT));
 		TGVoice voice = ((TGVoice) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_VOICE));
 		TGMeasure measure = ((TGMeasure) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_MEASURE));
 		TGString string = ((TGString) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_STRING));
-		
+
 		if( beat.isTextBeat() && beat.isRestBeat() ){
 			songManager.getMeasureManager().removeText(beat);
-		} 
+		}
 		else if( voice.isRestVoice() ){
 			songManager.getMeasureManager().removeVoice(voice, true);
 		}

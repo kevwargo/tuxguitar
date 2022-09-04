@@ -21,7 +21,7 @@ import org.herac.tuxguitar.ui.menu.UIMenuActionItem;
 import org.herac.tuxguitar.ui.menu.UIMenuCheckableItem;
 
 public class TrackMenu extends TGMenuItem {
-	
+
 	private UIMenu menu;
 	private UIMenuActionItem first;
 	private UIMenuActionItem last;
@@ -36,15 +36,15 @@ public class TrackMenu extends TGMenuItem {
 	private UIMenuCheckableItem changeSolo;
 	private UIMenuActionItem lyrics;
 	private UIMenuActionItem properties;
-	
+
 	public TrackMenu(UIMenu menu) {
 		this.menu = menu;
 	}
-	
+
 	public UIMenu getMenu() {
 		return this.menu;
 	}
-	
+
 	public void showItems(){
 		if(!isDisposed()){
 			//--First--
@@ -94,12 +94,12 @@ public class TrackMenu extends TGMenuItem {
 			//--PROPERTIES--
 			this.properties = this.menu.createActionItem();
 			this.properties.addSelectionListener(this.createActionProcessor(TGOpenTrackPropertiesDialogAction.NAME));
-			
+
 			this.loadIcons();
 			this.loadProperties();
 		}
 	}
-	
+
 	public void loadProperties(){
 		if(!isDisposed()){
 			setMenuItemTextAndAccelerator(this.first, "track.first", TGGoFirstTrackAction.NAME);
@@ -117,7 +117,7 @@ public class TrackMenu extends TGMenuItem {
 			setMenuItemTextAndAccelerator(this.properties, "track.properties", TGOpenTrackPropertiesDialogAction.NAME);
 		}
 	}
-	
+
 	public void update(){
 		if(!isDisposed()){
 			TGTrackImpl track = TuxGuitar.getInstance().getTablatureEditor().getTablature().getCaret().getTrack();
@@ -139,15 +139,15 @@ public class TrackMenu extends TGMenuItem {
 			this.changeMute.setChecked(track.isMute());
 		}
 	}
-	
+
 	public void loadIcons(){
 		//Nothing to do
 	}
-	
+
 	public boolean isDisposed(){
 		return (this.menu == null || this.menu.isDisposed());
 	}
-	
+
 	public void dispose(){
 		if(!isDisposed()){
 			this.menu.dispose();

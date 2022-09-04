@@ -8,20 +8,20 @@ import org.herac.tuxguitar.resource.TGResourceManager;
 import org.herac.tuxguitar.util.TGContext;
 
 public class TGAboutContentReader {
-	
+
 	private static final String PREFIX = "about_";
 	private static final String EXTENSION = ".dist";
-	
+
 	public static final String DESCRIPTION = "description";
 	public static final String AUTHORS = "authors";
 	public static final String LICENSE = "license";
-	
+
 	private TGContext context;
-	
+
 	public TGAboutContentReader(TGContext context){
 		this.context = context;
 	}
-	
+
 	public StringBuffer read(String doc){
 		String lang = TuxGuitar.getInstance().getLanguageManager().getLanguage();
 		InputStream is = TGResourceManager.getInstance(this.context).getResourceAsStream(PREFIX + doc + "_" + lang + EXTENSION);
@@ -33,7 +33,7 @@ public class TGAboutContentReader {
 		}
 		return new StringBuffer();
 	}
-	
+
 	public StringBuffer read(InputStream is){
 		StringBuffer sb = new StringBuffer();
 		try {

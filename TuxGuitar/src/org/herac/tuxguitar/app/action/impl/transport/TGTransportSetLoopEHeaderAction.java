@@ -9,13 +9,13 @@ import org.herac.tuxguitar.song.models.TGMeasure;
 import org.herac.tuxguitar.util.TGContext;
 
 public class TGTransportSetLoopEHeaderAction extends TGActionBase {
-	
+
 	public static final String NAME = "action.transport.set-loop-end";
-	
+
 	public TGTransportSetLoopEHeaderAction(TGContext context) {
 		super(context, NAME);
 	}
-	
+
 	protected void processAction(TGActionContext context){
 		TGMeasure measure = context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_MEASURE);
 		if( measure != null ){

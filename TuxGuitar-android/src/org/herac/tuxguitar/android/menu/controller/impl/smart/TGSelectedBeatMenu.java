@@ -20,7 +20,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 
 public class TGSelectedBeatMenu extends TGMenuBase {
-	
+
 	public TGSelectedBeatMenu(TGActivity activity) {
 		super(activity);
 	}

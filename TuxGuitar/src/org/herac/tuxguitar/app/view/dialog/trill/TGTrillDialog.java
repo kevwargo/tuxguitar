@@ -27,16 +27,16 @@ import org.herac.tuxguitar.ui.widget.UIWindow;
 import org.herac.tuxguitar.util.TGContext;
 
 public class TGTrillDialog {
-	
+
 	private UISpinner fretSpinner;
 	private UIRadioButton sixtyFourthButton;
 	private UIRadioButton thirtySecondButton;
 	private UIRadioButton sixTeenthButton;
-	
+
 	public TGTrillDialog(){
 		super();
 	}
-	
+
 	public void show(final TGViewContext context){
 		final TGMeasure measure = context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_MEASURE);
 		final TGBeat beat = context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_BEAT);
@@ -47,10 +47,10 @@ public class TGTrillDialog {
 			final UIWindow uiParent = context.getAttribute(TGViewContext.ATTRIBUTE_PARENT);
 			final UITableLayout dialogLayout = new UITableLayout();
 			final UIWindow dialog = uiFactory.createWindow(uiParent, true, false);
-			
+
 			dialog.setLayout(dialogLayout);
 			dialog.setText(TuxGuitar.getProperty("effects.trill-editor"));
-			
+
 			//-----defaults-------------------------------------------------
 			int fret = note.getValue();
 			int duration = TGDuration.SIXTEENTH;
@@ -66,17 +66,17 @@ public class TGTrillDialog {
 			noteGroup.setText(TuxGuitar.getProperty("note"));
 			noteGroup.setLayout(noteLayout);
 			dialogLayout.set(noteGroup, 1, 1, UITableLayout.ALIGN_FILL, UITableLayout.ALIGN_FILL, true, true);
-			
+
 			UILabel fretLabel = uiFactory.createLabel(noteGroup);
 			fretLabel.setText(TuxGuitar.getProperty("fret") + ": ");
 			noteLayout.set(fretLabel, 1, 1, UITableLayout.ALIGN_LEFT, UITableLayout.ALIGN_CENTER, false, false);
-			
+
 			this.fretSpinner = uiFactory.createSpinner(noteGroup);
 			this.fretSpinner.setValue(fret);
 			this.fretSpinner.setMaximum(30);
 			this.fretSpinner.setMinimum(0);
 			noteLayout.set(this.fretSpinner, 1, 2, UITableLayout.ALIGN_FILL, UITableLayout.ALIGN_FILL, true, true);
-			
+
 			//---------------------------------------------------
 			//------------------DURATION-------------------------
 			//---------------------------------------------------
@@ -85,22 +85,22 @@ public class TGTrillDialog {
 			durationGroup.setText(TuxGuitar.getProperty("duration"));
 			durationGroup.setLayout(durationLayout);
 			dialogLayout.set(durationGroup, 2, 1, UITableLayout.ALIGN_FILL, UITableLayout.ALIGN_FILL, true, true);
-			
+
 			this.sixtyFourthButton = uiFactory.createRadioButton(durationGroup);
 			this.sixtyFourthButton.setImage(TuxGuitar.getInstance().getIconManager().getDuration(TGDuration.SIXTY_FOURTH));
 			this.sixtyFourthButton.setSelected(duration == TGDuration.SIXTY_FOURTH);
 			durationLayout.set(this.sixtyFourthButton, 1, 1, UITableLayout.ALIGN_FILL, UITableLayout.ALIGN_FILL, true, true);
-			
+
 			this.thirtySecondButton = uiFactory.createRadioButton(durationGroup);
 			this.thirtySecondButton.setImage(TuxGuitar.getInstance().getIconManager().getDuration(TGDuration.THIRTY_SECOND));
 			this.thirtySecondButton.setSelected(duration == TGDuration.THIRTY_SECOND);
 			durationLayout.set(this.thirtySecondButton, 1, 2, UITableLayout.ALIGN_FILL, UITableLayout.ALIGN_FILL, true, true);
-			
+
 			this.sixTeenthButton = uiFactory.createRadioButton(durationGroup);
 			this.sixTeenthButton.setImage(TuxGuitar.getInstance().getIconManager().getDuration(TGDuration.SIXTEENTH));
 			this.sixTeenthButton.setSelected(duration == TGDuration.SIXTEENTH);
 			durationLayout.set(this.sixTeenthButton, 1, 3, UITableLayout.ALIGN_FILL, UITableLayout.ALIGN_FILL, true, true);
-			
+
 			//---------------------------------------------------
 			//------------------BUTTONS--------------------------
 			//---------------------------------------------------
@@ -108,7 +108,7 @@ public class TGTrillDialog {
 			UIPanel buttons = uiFactory.createPanel(dialog, false);
 			buttons.setLayout(buttonsLayout);
 			dialogLayout.set(buttons, 3, 1, UITableLayout.ALIGN_RIGHT, UITableLayout.ALIGN_FILL, true, true);
-			
+
 			final UIButton buttonOK = uiFactory.createButton(buttons);
 			buttonOK.setText(TuxGuitar.getProperty("ok"));
 			buttonOK.setDefaultButton();
@@ -119,7 +119,7 @@ public class TGTrillDialog {
 				}
 			});
 			buttonsLayout.set(buttonOK, 1, 1, UITableLayout.ALIGN_FILL, UITableLayout.ALIGN_FILL, true, true, 1, 1, 80f, 25f, null);
-			
+
 			UIButton buttonClean = uiFactory.createButton(buttons);
 			buttonClean.setText(TuxGuitar.getProperty("clean"));
 			buttonClean.addSelectionListener(new UISelectionListener() {
@@ -129,7 +129,7 @@ public class TGTrillDialog {
 				}
 			});
 			buttonsLayout.set(buttonClean, 1, 2, UITableLayout.ALIGN_FILL, UITableLayout.ALIGN_FILL, true, true, 1, 1, 80f, 25f, null);
-			
+
 			UIButton buttonCancel = uiFactory.createButton(buttons);
 			buttonCancel.setText(TuxGuitar.getProperty("cancel"));
 			buttonCancel.addSelectionListener(new UISelectionListener() {
@@ -139,11 +139,11 @@ public class TGTrillDialog {
 			});
 			buttonsLayout.set(buttonCancel, 1, 3, UITableLayout.ALIGN_FILL, UITableLayout.ALIGN_FILL, true, true, 1, 1, 80f, 25f, null);
 			buttonsLayout.set(buttonCancel, UITableLayout.MARGIN_RIGHT, 0f);
-			
+
 			TGDialogUtil.openDialog(dialog, TGDialogUtil.OPEN_STYLE_CENTER | TGDialogUtil.OPEN_STYLE_PACK);
 		}
 	}
-	
+
 	public TGEffectTrill getTrill(){
 		TGEffectTrill tgEffect = TuxGuitar.getInstance().getSongManager().getFactory().newEffectTrill();
 		tgEffect.setFret(this.fretSpinner.getValue());
@@ -158,7 +158,7 @@ public class TGTrillDialog {
 		}
 		return tgEffect;
 	}
-	
+
 	public void changeTrill(TGContext context, TGMeasure measure, TGBeat beat, TGString string, TGEffectTrill effect) {
 		TGActionProcessor tgActionProcessor = new TGActionProcessor(context, TGChangeTrillNoteAction.NAME);
 		tgActionProcessor.setAttribute(TGDocumentContextAttributes.ATTRIBUTE_MEASURE, measure);

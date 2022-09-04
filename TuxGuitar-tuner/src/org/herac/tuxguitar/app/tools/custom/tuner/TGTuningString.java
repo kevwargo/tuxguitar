@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.herac.tuxguitar.app.tools.custom.tuner;
 
@@ -18,19 +18,19 @@ public class TGTuningString {
 	private int string;
 	private UIToggleButton stringButton = null;
 	private TGTunerListener listener = null;
-	
-	
-	
+
+
+
 	TGTuningString(UIFactory factory, UIContainer parent, TGTunerListener listener, int string) {
 		this.string = string;
 		this.listener = listener;
-		
+
 		this.stringButton = factory.createToggleButton(parent);
 		this.stringButton.setText("--------- "+TGTunerRoughWidget.TONESSTRING[string%12]+(int)Math.floor(string/12)+" ---------");
 	}
 
-	
-	
+
+
 	void addListener() {
 		this.stringButton.addSelectionListener(new UISelectionListener() {
 			public void onSelect(UISelectionEvent event) {
@@ -39,13 +39,13 @@ public class TGTuningString {
 			}
 		});
 	}
-	
+
 	public int getString() {
 		return this.string;
 	}
-	
+
 	public UIToggleButton getStringButton() {
 		return this.stringButton;
 	}
-	
+
 }

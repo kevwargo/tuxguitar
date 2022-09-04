@@ -7,26 +7,26 @@ import org.herac.tuxguitar.player.base.MidiPlayerMode;
 import org.herac.tuxguitar.util.TGContext;
 
 public class TGTransportModeAction extends TGActionBase {
-	
+
 	public static final String NAME = "action.transport.mode";
-	
+
 	public static final String ATTRIBUTE_TYPE = "type";
 	public static final String ATTRIBUTE_LOOP = "loop";
 	public static final String ATTRIBUTE_SIMPLE_PERCENT = "simplePercent";
 	public static final String ATTRIBUTE_CUSTOM_PERCENT_FROM = "customPercentFrom";
 	public static final String ATTRIBUTE_CUSTOM_PERCENT_TO = "customPercentTo";
 	public static final String ATTRIBUTE_CUSTOM_PERCENT_INCREMENT = "customPercentIncrement";
-	
+
 	public static final String ATTRIBUTE_LOOP_S_HEADER = "loopSHeader";
 	public static final String ATTRIBUTE_LOOP_E_HEADER = "loopEHeader";
-	
+
 	public TGTransportModeAction(TGContext context) {
 		super(context, NAME);
 	}
-	
+
 	protected void processAction(TGActionContext context){
 		MidiPlayerMode mode = MidiPlayer.getInstance(getContext()).getMode();
-		
+
 		mode.setType((Integer)context.getAttribute(ATTRIBUTE_TYPE));
 		mode.setLoop((Boolean)context.getAttribute(ATTRIBUTE_LOOP));
 		mode.setSimplePercent((Integer)context.getAttribute(ATTRIBUTE_SIMPLE_PERCENT));

@@ -8,13 +8,13 @@ import org.herac.tuxguitar.song.models.TGString;
 import org.herac.tuxguitar.util.TGContext;
 
 public class TGChangeVelocityAction extends TGActionBase {
-	
+
 	public static final String NAME = "action.note.general.velocity";
-	
+
 	public TGChangeVelocityAction(TGContext context) {
 		super(context, NAME);
 	}
-	
+
 	protected void processAction(TGActionContext context){
 		TGMeasure measure = (TGMeasure) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_MEASURE);
 		TGString string = (TGString) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_STRING);
@@ -22,7 +22,7 @@ public class TGChangeVelocityAction extends TGActionBase {
 		Integer velocity = (Integer) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_VELOCITY);
 		if( velocity != null && position != null && string != null && measure != null ){
 			getSongManager(context).getMeasureManager().changeVelocity(velocity, measure, position, string.getNumber());
-			
+
 			context.setAttribute(ATTRIBUTE_SUCCESS, Boolean.TRUE);
 		}
 	}

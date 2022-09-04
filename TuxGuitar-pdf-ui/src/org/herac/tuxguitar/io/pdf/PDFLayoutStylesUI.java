@@ -4,7 +4,7 @@ import org.herac.tuxguitar.app.system.config.TGConfigKeys;
 import org.herac.tuxguitar.app.system.config.TGConfigManager;
 
 public class PDFLayoutStylesUI extends PDFLayoutStyles {
-	
+
 	public PDFLayoutStylesUI(TGConfigManager config) {
 		this.setLineColor(config.getColorModelConfigValue(TGConfigKeys.COLOR_LINE));
 		this.setScoreNoteColor(config.getColorModelConfigValue(TGConfigKeys.COLOR_SCORE_NOTE));

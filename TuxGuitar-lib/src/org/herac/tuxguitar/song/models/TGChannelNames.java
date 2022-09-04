@@ -1,7 +1,7 @@
 package org.herac.tuxguitar.song.models;
 
 public class TGChannelNames {
-	
+
 	public static final String[] DEFAULT_NAMES = {
 		("Piano"),
 		("Bright Piano"),

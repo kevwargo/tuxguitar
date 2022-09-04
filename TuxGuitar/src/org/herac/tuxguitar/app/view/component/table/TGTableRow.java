@@ -13,7 +13,7 @@ import org.herac.tuxguitar.ui.widget.UICanvas;
 import org.herac.tuxguitar.ui.widget.UIPanel;
 
 public class TGTableRow {
-	
+
 	private TGTable table;
 	private UIPanel row;
 	private TGTableRowCell number;
@@ -21,50 +21,50 @@ public class TGTableRow {
 	private TGTableRowCell name;
 	private TGTableRowCell instrument;
 	private UICanvas painter;
-	
+
 	private UIMouseUpListener mouseUpListenerLabel;
 	private UIMouseDownListener mouseDownListenerLabel;
 	private UIMouseDoubleClickListener mouseDoubleClickListenerLabel;
-	
+
 	private UIMouseUpListener mouseUpListenerCanvas;
 	private UIMouseDownListener mouseDownListenerCanvas;
 	private UIMouseDoubleClickListener mouseDoubleClickListenerCanvas;
-	
+
 	private TGTableCanvasPainter paintListenerCanvas;
-	
+
 	public TGTableRow(TGTable table){
 		this.table = table;
 		this.init();
 	}
-	
+
 	public void init(){
 		UIFactory uiFactory = this.table.getUIFactory();
 		MouseListenerLabel mouseListenerLabel = new MouseListenerLabel();
 		MouseListenerCanvas mouseListenerCanvas = new MouseListenerCanvas();
-		
+
 		this.row = uiFactory.createPanel(this.table.getRowControl(), false);
 		this.row.setLayout(new TGTableRowLayout(this));
-		
+
 		this.number = new TGTableRowCell(this);
 		this.number.addMouseDownListener(mouseListenerLabel);
 		this.number.addMouseUpListener(mouseListenerLabel);
 		this.number.addMouseDoubleClickListener(mouseListenerLabel);
-		
+
 		this.soloMute = new TGTableRowCell(this);
 		this.soloMute.addMouseDownListener(mouseListenerLabel);
 		this.soloMute.addMouseUpListener(mouseListenerLabel);
 		this.soloMute.addMouseDoubleClickListener(mouseListenerLabel);
-		
+
 		this.name = new TGTableRowCell(this);
 		this.name.addMouseDownListener(mouseListenerLabel);
 		this.name.addMouseUpListener(mouseListenerLabel);
 		this.name.addMouseDoubleClickListener(mouseListenerLabel);
-		
+
 		this.instrument = new TGTableRowCell(this);
 		this.instrument.addMouseDownListener(mouseListenerLabel);
 		this.instrument.addMouseUpListener(mouseListenerLabel);
 		this.instrument.addMouseDoubleClickListener(mouseListenerLabel);
-		
+
 		this.painter = uiFactory.createCanvas(this.row, false);
 		this.painter.addMouseDownListener(mouseListenerCanvas);
 		this.painter.addMouseUpListener(mouseListenerCanvas);
@@ -72,49 +72,49 @@ public class TGTableRow {
 		this.painter.addPaintListener(new TGBufferedPainterListenerLocked(this.table.getContext(), new TGTableRowPaintHandle()));
 		this.table.appendListeners(this.painter);
 	}
-	
+
 	public void setBgColor(UIColor background){
 		this.number.setBgColor(background);
 		this.soloMute.setBgColor(background);
 		this.name.setBgColor(background);
 		this.instrument.setBgColor(background);
 	}
-	
+
 	public void setFgColor(UIColor foreground){
 		this.number.setFgColor(foreground);
 		this.soloMute.setFgColor(foreground);
 		this.name.setFgColor(foreground);
 		this.instrument.setFgColor(foreground);
 	}
-	
+
 	public void dispose(){
 		this.row.dispose();
 	}
-	
+
 	public TGTable getTable() {
 		return this.table;
 	}
-	
+
 	public UIPanel getControl() {
 		return this.row;
 	}
-	
+
 	public UICanvas getPainter() {
 		return this.painter;
 	}
-	
+
 	public TGTableRowCell getInstrument() {
 		return this.instrument;
 	}
-	
+
 	public TGTableRowCell getName() {
 		return this.name;
 	}
-	
+
 	public TGTableRowCell getNumber() {
 		return this.number;
 	}
-	
+
 	public TGTableRowCell getSoloMute() {
 		return this.soloMute;
 	}
@@ -170,17 +170,17 @@ public class TGTableRow {
 	public TGTableCanvasPainter getPaintListenerCanvas() {
 		return this.paintListenerCanvas;
 	}
-	
+
 	public void setPaintListenerCanvas(TGTableCanvasPainter paintListenerCanvas) {
 		this.paintListenerCanvas = paintListenerCanvas;
 	}
-	
+
 	private class MouseListenerLabel implements UIMouseUpListener, UIMouseDownListener, UIMouseDoubleClickListener{
-		
+
 		public MouseListenerLabel(){
 			super();
 		}
-		
+
 		public void onMouseDoubleClick(UIMouseEvent event) {
 			if( getMouseDoubleClickListenerLabel() != null){
 				getMouseDoubleClickListenerLabel().onMouseDoubleClick(event);
@@ -199,13 +199,13 @@ public class TGTableRow {
 			}
 		}
 	}
-	
+
 	private class MouseListenerCanvas implements UIMouseUpListener, UIMouseDownListener, UIMouseDoubleClickListener{
-		
+
 		public MouseListenerCanvas(){
 			super();
 		}
-		
+
 		public void onMouseDoubleClick(UIMouseEvent event) {
 			if( getMouseDoubleClickListenerCanvas() != null){
 				getMouseDoubleClickListenerCanvas().onMouseDoubleClick(event);
@@ -224,9 +224,9 @@ public class TGTableRow {
 			}
 		}
 	}
-	
+
 	private class TGTableRowPaintHandle implements TGBufferedPainterHandle {
-		
+
 		public TGTableRowPaintHandle(){
 			super();
 		}

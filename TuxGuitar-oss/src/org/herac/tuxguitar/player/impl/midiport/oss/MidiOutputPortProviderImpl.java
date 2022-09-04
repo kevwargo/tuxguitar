@@ -7,14 +7,14 @@ import org.herac.tuxguitar.player.base.MidiOutputPortProvider;
 import org.herac.tuxguitar.util.TGContext;
 
 public class MidiOutputPortProviderImpl implements MidiOutputPortProvider{
-	
+
 	private TGContext context;
 	private MidiSystem midiSystem;
-	
+
 	public MidiOutputPortProviderImpl(TGContext context){
 		this.context = context;
 	}
-	
+
 	public List<MidiOutputPort> listPorts() {
 		if(this.midiSystem == null){
 			this.midiSystem = new MidiSystem();
@@ -24,7 +24,7 @@ public class MidiOutputPortProviderImpl implements MidiOutputPortProvider{
 		}
 		return this.midiSystem.findPorts();
 	}
-	
+
 	public void closeAll(){
 		if(this.midiSystem != null){
 			this.midiSystem.close();
@@ -32,7 +32,7 @@ public class MidiOutputPortProviderImpl implements MidiOutputPortProvider{
 			this.midiSystem = null;
 		}
 	}
-	
+
 	public void updateDevice(String device){
 		if(this.midiSystem != null && this.midiSystem.isOpen()){
 			MidiOutputPortImpl connection = this.midiSystem.getConnection();

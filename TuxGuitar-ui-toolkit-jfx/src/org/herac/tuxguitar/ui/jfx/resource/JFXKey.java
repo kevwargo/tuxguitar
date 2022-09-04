@@ -7,7 +7,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 public class JFXKey {
-	
+
 	private static final JFXKeyMap[] KEY_MAP = new JFXKeyMap[] {
 		new JFXKeyMap(KeyCode.F1, UIKey.F1),
 		new JFXKeyMap(KeyCode.F2, UIKey.F2),
@@ -75,7 +75,7 @@ public class JFXKey {
 		new JFXKeyMap(KeyCode.NUMPAD8, new UIKey("8")),
 		new JFXKeyMap(KeyCode.NUMPAD9, new UIKey("9"))
 	};
-	
+
 	public static UIKey getKey(KeyEvent keyEvent) {
 		KeyCode keyCode = keyEvent.getCode();
 		for(JFXKeyMap keyMap : KEY_MAP) {
@@ -85,7 +85,7 @@ public class JFXKey {
 		}
 		return new UIKey(keyCode.toString().toLowerCase());
 	}
-	
+
 	public static UIKeyCombination getCombination(KeyEvent keyEvent) {
 		UIKeyCombination keyCombination = new UIKeyCombination();
 		if( keyEvent.isAltDown() ) {
@@ -100,29 +100,29 @@ public class JFXKey {
 		if( keyEvent.isMetaDown() ) {
 			keyCombination.getKeys().add(UIKey.COMMAND);
 		}
-		
+
 		UIKey principalKey = JFXKey.getKey(keyEvent);
 		if(!keyCombination.contains(principalKey)) {
 			keyCombination.getKeys().add(principalKey);
 		}
-		
+
 		return keyCombination;
 	}
-	
+
 	private static class JFXKeyMap {
-		
+
 		private KeyCode code;
 		private UIKey key;
-		
+
 		public JFXKeyMap(KeyCode code, UIKey key) {
 			this.code = code;
 			this.key = key;
 		}
-		
+
 		public KeyCode getCode() {
 			return this.code;
 		}
-		
+
 		public UIKey getKey() {
 			return this.key;
 		}

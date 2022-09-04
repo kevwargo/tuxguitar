@@ -9,17 +9,17 @@ import org.herac.tuxguitar.editor.action.TGActionBase;
 import org.herac.tuxguitar.util.TGContext;
 
 public class TGReloadLanguageAction extends TGActionBase {
-	
+
 	public static final String NAME = "action.system.reload-language";
-	
+
 	public TGReloadLanguageAction(TGContext context) {
 		super(context, NAME);
 	}
-	
+
 	protected void processAction(TGActionContext context){
 		TGConfigManager config = TGConfigManager.getInstance(this.getContext());
 		TGLanguageManager languageManager = TuxGuitar.getInstance().getLanguageManager();
-		
+
 		boolean changed = Boolean.TRUE.equals(context.getAttribute(TGReloadSettingsAction.ATTRIBUTE_FORCE));
 		if(!changed){
 			String languageLoaded = languageManager.getLanguage();
@@ -34,7 +34,7 @@ public class TGReloadLanguageAction extends TGActionBase {
 				changed = true;
 			}
 		}
-		
+
 		if( changed ){
 			languageManager.setLanguage(config.getStringValue(TGConfigKeys.LANGUAGE));
 		}

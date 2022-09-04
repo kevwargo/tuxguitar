@@ -16,8 +16,8 @@ import org.herac.tuxguitar.ui.menu.UIMenuCheckableItem;
 import org.herac.tuxguitar.ui.menu.UIMenuSubMenuItem;
 
 public class EditMenuItem extends TGMenuItem{
-	
-	private UIMenuSubMenuItem editMenuItem; 
+
+	private UIMenuSubMenuItem editMenuItem;
 	private UIMenuActionItem undo;
 	private UIMenuActionItem redo;
 	private UIMenuCheckableItem modeSelection;
@@ -25,11 +25,11 @@ public class EditMenuItem extends TGMenuItem{
 	private UIMenuCheckableItem notNaturalKey;
 	private UIMenuCheckableItem voice1;
 	private UIMenuCheckableItem voice2;
-	
+
 	public EditMenuItem(UIMenu parent) {
 		this.editMenuItem = parent.createSubMenuItem();
 	}
-	
+
 	public void showItems() {
 		//---------------------------------------------------
 		//--UNDO--
@@ -57,11 +57,11 @@ public class EditMenuItem extends TGMenuItem{
 		//--VOICE 2
 		this.voice2 = this.editMenuItem.getMenu().createRadioItem();
 		this.voice2.addSelectionListener(this.createActionProcessor(TGSetVoice2Action.NAME));
-		
+
 		this.loadIcons();
 		this.loadProperties();
 	}
-	
+
 	public void update(){
 		EditorKit kit = TuxGuitar.getInstance().getTablatureEditor().getTablature().getEditorKit();
 		boolean running = TuxGuitar.getInstance().getPlayer().isRunning();
@@ -76,7 +76,7 @@ public class EditMenuItem extends TGMenuItem{
 		this.voice1.setChecked(kit.getTablature().getCaret().getVoice() == 0);
 		this.voice2.setChecked(kit.getTablature().getCaret().getVoice() == 1);
 	}
-	
+
 	public void loadProperties(){
 		setMenuItemTextAndAccelerator(this.editMenuItem, "edit.menu", null);
 		setMenuItemTextAndAccelerator(this.undo, "edit.undo", TGUndoAction.NAME);
@@ -87,7 +87,7 @@ public class EditMenuItem extends TGMenuItem{
 		setMenuItemTextAndAccelerator(this.voice1, "edit.voice-1", TGSetVoice1Action.NAME);
 		setMenuItemTextAndAccelerator(this.voice2, "edit.voice-2", TGSetVoice2Action.NAME);
 	}
-	
+
 	public void loadIcons(){
 		this.undo.setImage(TuxGuitar.getInstance().getIconManager().getEditUndo());
 		this.redo.setImage(TuxGuitar.getInstance().getIconManager().getEditRedo());

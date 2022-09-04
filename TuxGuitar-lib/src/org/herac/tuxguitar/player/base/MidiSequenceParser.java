@@ -25,7 +25,7 @@ import org.herac.tuxguitar.song.models.effects.TGEffectTremoloBar;
 import org.herac.tuxguitar.song.models.effects.TGEffectTremoloBar.TremoloBarPoint;
 
 public class MidiSequenceParser {
-	
+
 	public static final int ADD_DEFAULT_CONTROLS = 0x01;
 	public static final int ADD_MIXER_MESSAGES = 0x02;
 	public static final int ADD_BANK_SELECT = 0x04;
@@ -33,13 +33,13 @@ public class MidiSequenceParser {
 	public static final int ADD_FIRST_TICK_MOVE = 0x10;
 	public static final int DEFAULT_PLAY_FLAGS = (ADD_METRONOME);
 	public static final int DEFAULT_EXPORT_FLAGS = (ADD_FIRST_TICK_MOVE | ADD_DEFAULT_CONTROLS | ADD_MIXER_MESSAGES);
-	
+
 	private static final int DEFAULT_METRONOME_KEY = 37;
 	private static final int DEFAULT_DURATION_PM = 60;
 	private static final int DEFAULT_DURATION_DEAD = 30;
 	private static final int DEFAULT_BEND = 64;
 	private static final float DEFAULT_BEND_SEMI_TONE = 2.75f;
-	
+
 	private TGSong song;
 	private TGSongManager songManager;
 	private int flags;
@@ -51,7 +51,7 @@ public class MidiSequenceParser {
 	private int transpose;
 	private int sHeader;
 	private int eHeader;
-	
+
 	public MidiSequenceParser(TGSong song, TGSongManager songManager, int flags) {
 		this.song = song;
 		this.songManager = songManager;
@@ -62,27 +62,27 @@ public class MidiSequenceParser {
 		this.eHeader = -1;
 		this.firstTickMove = (int) ((flags & ADD_FIRST_TICK_MOVE) != 0 ? -TGDuration.QUARTER_TIME : 0);
 	}
-	
+
 	public int getInfoTrack(){
 		return this.infoTrack;
 	}
-	
+
 	public int getMetronomeTrack(){
 		return this.metronomeTrack;
 	}
-	
+
 	private long getTick(long tick){
 		return (tick + this.firstTickMove);
 	}
-	
+
 	public void setSHeader(int header) {
 		this.sHeader = header;
 	}
-	
+
 	public void setEHeader(int header) {
 		this.eHeader = header;
 	}
-	
+
 	public void setMetronomeChannelId(int metronomeChannelId) {
 		this.metronomeChannelId = metronomeChannelId;
 	}
@@ -94,11 +94,11 @@ public class MidiSequenceParser {
 	public void setTranspose(int transpose) {
 		this.transpose = transpose;
 	}
-	
+
 	public void parse(MidiSequenceHandler sequence) {
 		this.infoTrack = 0;
 		this.metronomeTrack = (sequence.getTracks() - 1);
-		
+
 		MidiSequenceHelper helper = new MidiSequenceHelper(sequence);
 		MidiRepeatController controller = new MidiRepeatController(this.song, this.sHeader, this.eHeader);
 		while(!controller.finished()){
@@ -109,15 +109,15 @@ public class MidiSequenceParser {
 				helper.addMeasureHelper(new MidiMeasureHelper(index, move));
 			}
 		}
-		
+
 		this.addDefaultMessages(helper, this.song);
-		
+
 		for (int i = 0; i < this.song.countTracks(); i++) {
 			addTrack(helper, this.song.getTrack(i));
 		}
 		sequence.notifyFinish();
 	}
-	
+
 	private void addDefaultMessages(MidiSequenceHelper sh, TGSong tgSong) {
 		if( (this.flags & ADD_DEFAULT_CONTROLS) != 0) {
 			Iterator<TGChannel> it = tgSong.getChannels();
@@ -130,19 +130,19 @@ public class MidiSequenceParser {
 			}
 		}
 	}
-	
+
 	private void addTrack(MidiSequenceHelper sh, TGTrack track) {
 		TGChannel tgChannel = this.songManager.getChannel(this.song, track.getChannelId() );
 		if( tgChannel != null ){
 			TGMeasure previous = null;
-			
+
 			this.addBend(sh,track.getNumber(),TGDuration.QUARTER_TIME,DEFAULT_BEND, tgChannel.getChannelId(), -1, false);
 			this.addChannel(sh, tgChannel, track.getNumber());
-			
+
 			int mCount = sh.getMeasureHelpers().size();
 			for( int mIndex = 0 ; mIndex < mCount ; mIndex++ ){
 				MidiMeasureHelper mh = sh.getMeasureHelper( mIndex );
-				
+
 				TGMeasure measure = track.getMeasure(mh.getIndex());
 				if(track.getNumber() == 1){
 					addTimeSignature(sh,measure, previous, mh.getMove());
@@ -151,12 +151,12 @@ public class MidiSequenceParser {
 				}
 				//agrego los pulsos
 				addBeats( sh, tgChannel, track, measure, mIndex, mh.getMove() );
-				
+
 				previous = measure;
 			}
 		}
 	}
-	
+
 	private void addChannel(MidiSequenceHelper sh, TGChannel channel, int track) {
 		if((this.flags & ADD_MIXER_MESSAGES) != 0){
 			int channelId = channel.getChannelId();
@@ -168,14 +168,14 @@ public class MidiSequenceParser {
 			sh.getSequence().addControlChange(tick, track, channelId, MidiControllers.PHASER, fix(channel.getPhaser()));
 			sh.getSequence().addControlChange(tick, track, channelId, MidiControllers.TREMOLO, fix(channel.getTremolo()));
 			sh.getSequence().addControlChange(tick, track, channelId, MidiControllers.EXPRESSION, 127);
-			
+
 			if((this.flags & ADD_BANK_SELECT) != 0) {
 				sh.getSequence().addControlChange(tick, track, channelId, MidiControllers.BANK_SELECT, fix(channel.getBank(), 0, 128));
 			}
 			sh.getSequence().addProgramChange(tick, track, channelId, fix(channel.getProgram()));
 		}
 	}
-	
+
 	private void addBeats(MidiSequenceHelper sh, TGChannel channel, TGTrack track, TGMeasure measure, int mIndex, long startMove) {
 		int[] stroke = new int[track.stringCount()];
 		TGBeat previous = null;
@@ -185,25 +185,25 @@ public class MidiSequenceParser {
 			previous = beat;
 		}
 	}
-	
+
 	private void addNotes( MidiSequenceHelper sh, TGChannel tgChannel, TGTrack track, TGBeat beat, TGTempo tempo, int mIndex,int bIndex, long startMove, int[] stroke) {
 		for( int vIndex = 0; vIndex < beat.countVoices(); vIndex ++ ){
 			TGVoice voice = beat.getVoice(vIndex);
-			
+
 			MidiTickHelper th = checkTripletFeel(voice,bIndex);
 			for (int noteIdx = 0; noteIdx < voice.countNotes(); noteIdx++) {
 				TGNote note = voice.getNote(noteIdx);
 				if (!note.isTiedNote()) {
 					int key = (this.transpose + track.getOffset() + note.getValue() + ((TGString)track.getStrings().get(note.getString() - 1)).getValue());
-					
+
 					long start = applyStrokeStart(note, (th.getStart() + startMove) , stroke);
 					long duration = applyStrokeDuration(note, getRealNoteDuration(sh, track, note, tempo, th.getDuration(), mIndex,bIndex), stroke);
-					
+
 					int velocity = getRealVelocity(sh, note, track, tgChannel, mIndex, bIndex);
 					int channel = tgChannel.getChannelId();
 					int midiVoice = note.getString();
 					boolean bendMode = false;
-					
+
 					boolean percussionChannel = tgChannel.isPercussionChannel();
 					//---Fade In---
 					if(note.getEffect().isFadeIn()){
@@ -216,19 +216,19 @@ public class MidiSequenceParser {
 						int graceLength = note.getEffect().getGrace().getDurationTime();
 						int graceVelocity = note.getEffect().getGrace().getDynamic();
 						long graceDuration = ((note.getEffect().getGrace().isDead())?applyStaticDuration(tempo, DEFAULT_DURATION_DEAD, graceLength):graceLength);
-						
+
 						if(note.getEffect().getGrace().isOnBeat() || (start - graceLength) < TGDuration.QUARTER_TIME){
 							start += graceLength;
 							duration -= graceLength;
 						}
 						addNote(sh,track.getNumber(), graceKey,start - graceLength,graceDuration,graceVelocity,channel,midiVoice, bendMode);
-						
+
 					}
 					//---Trill---
 					if(note.getEffect().isTrill() && !percussionChannel ){
 						int trillKey = track.getOffset() + note.getEffect().getTrill().getFret() + ((TGString)track.getStrings().get(note.getString() - 1)).getValue();
 						long trillLength = note.getEffect().getTrill().getDuration().getTime();
-						
+
 						boolean realKey = true;
 						long tick = start;
 						while(true){
@@ -258,7 +258,7 @@ public class MidiSequenceParser {
 						}
 						continue;
 					}
-					
+
 					//---Bend---
 					if( note.getEffect().isBend() && !percussionChannel ){
 						bendMode = true;
@@ -282,7 +282,7 @@ public class MidiSequenceParser {
 					//---Harmonic---
 					if( note.getEffect().isHarmonic() && !percussionChannel){
 						int orig = key;
-						
+
 						//Natural
 						if(note.getEffect().getHarmonic().isNatural()){
 							for(int i = 0;i < TGEffectHarmonic.NATURAL_FREQUENCIES.length;i ++){
@@ -298,21 +298,21 @@ public class MidiSequenceParser {
 								addNote(sh,track.getNumber(),Math.min(127,orig), start, duration,Math.max(TGVelocities.MIN_VELOCITY,velocity - (TGVelocities.VELOCITY_INCREMENT * 3)),channel,midiVoice,bendMode);
 							}
 							key = (orig + TGEffectHarmonic.NATURAL_FREQUENCIES[note.getEffect().getHarmonic().getData()][1]);
-							
+
 						}
 						if( (key - 12) > 0 ){
 							int hVelocity = Math.max(TGVelocities.MIN_VELOCITY,velocity - (TGVelocities.VELOCITY_INCREMENT * 4));
 							addNote(sh,track.getNumber(),(key - 12), start, duration,hVelocity,channel,midiVoice,bendMode);
 						}
 					}
-					
+
 					//---Normal Note---
 					addNote(sh,track.getNumber(), Math.min(127,key), start, duration, velocity,channel,midiVoice,bendMode);
 				}
 			}
 		}
 	}
-	
+
 	private void addNote(MidiSequenceHelper sh,int track, int key, long start, long duration, int velocity, int channel, int midiVoice, boolean bendMode) {
 		sh.getSequence().addNoteOn(getTick(start),track,channel,fix(key),fix(velocity), midiVoice, bendMode);
 		if( duration > 0 ){
@@ -332,15 +332,15 @@ public class MidiSequenceParser {
 		}
 	}
 
-	
+
 	private void addBend(MidiSequenceHelper sh,int track, long tick,int bend, int channel, int midiVoice, boolean bendMode) {
 		sh.getSequence().addPitchBend(getTick(tick), track, channel, fix(bend), midiVoice, bendMode);
 	}
-	
+
 	public void addVibrato(MidiSequenceHelper sh,int track,long start, long duration,int channel, int midiVoice, boolean bendMode){
 		long nextStart = start;
 		long end = nextStart + duration;
-		
+
 		while(nextStart < end){
 			nextStart = ((nextStart + 160 > end)?end:nextStart + 160);
 			addBend(sh, track, nextStart, DEFAULT_BEND, channel, midiVoice, bendMode);
@@ -349,7 +349,7 @@ public class MidiSequenceParser {
 		}
 		addBend(sh, track, nextStart, DEFAULT_BEND, channel, midiVoice, bendMode);
 	}
-	
+
 	public void addBend(MidiSequenceHelper sh,int track,long start, long duration, TGEffectBend bend, int channel, int midiVoice, boolean bendMode){
 		List<BendPoint> points = bend.getPoints();
 		for(int i=0;i<points.size();i++){
@@ -359,7 +359,7 @@ public class MidiSequenceParser {
 			value = ((value <= 127)?value:127);
 			value = ((value >= 0)?value:0);
 			addBend(sh, track, bendStart, value, channel, midiVoice, bendMode);
-			
+
 			if(points.size() > i + 1){
 				TGEffectBend.BendPoint nextPoint = (TGEffectBend.BendPoint)points.get(i + 1);
 				int nextValue = DEFAULT_BEND + (int)(nextPoint.getValue() * DEFAULT_BEND_SEMI_TONE / TGEffectBend.SEMITONE_LENGTH);
@@ -386,7 +386,7 @@ public class MidiSequenceParser {
 		}
 		addBend(sh, track, start + duration, DEFAULT_BEND, channel, midiVoice, bendMode);
 	}
-	
+
 	public void addTremoloBar(MidiSequenceHelper sh,int track,long start, long duration, TGEffectTremoloBar effect, int channel, int midiVoice, boolean bendMode){
 		List<TremoloBarPoint> points = effect.getPoints();
 		for(int i=0;i<points.size();i++){
@@ -422,23 +422,23 @@ public class MidiSequenceParser {
 		}
 		addBend(sh, track, start + duration, DEFAULT_BEND, channel, midiVoice, bendMode);
 	}
-	
+
 	private void addSlide(MidiSequenceHelper sh, TGNote note, TGTrack track, int mIndex, int bIndex, long startMove ,int channel, int midiVoice, boolean bendMode){
 		MidiNoteHelper nextNote = this.getNextNote(sh, note, track, mIndex, bIndex, true);
 		if( nextNote != null ){
 			int value1 = note.getValue();
 			int value2 = nextNote.getNote().getValue();
-			
+
 			long tick1 = note.getVoice().getBeat().getStart() + startMove;
 			long tick2 = nextNote.getNote().getVoice().getBeat().getStart() + nextNote.getMeasure().getMove();
-			
+
 			// Make the Slide
 			this.addSlide(sh, track.getNumber(), tick1, value1, tick2, value2, channel, midiVoice, bendMode);
 			// Normalize the Bend
 			this.addBend(sh,track.getNumber(), tick2 ,DEFAULT_BEND, channel, midiVoice, bendMode);
 		}
 	}
-	
+
 	public void addSlide(MidiSequenceHelper sh,int track,long tick1,int value1,long tick2,int value2,int channel, int midiVoice, boolean bendMode){
 		long distance = (value2 - value1);
 		long length = (tick2 - tick1);
@@ -449,7 +449,7 @@ public class MidiSequenceParser {
 			addBend(sh, track, tick1 + ( (length / points) * i), bend, channel, midiVoice, bendMode);
 		}
 	}
-	
+
 	private void addFadeIn(MidiSequenceHelper sh,int track,long start,long duration,int volume3,int channel){
 		int expression = 31;
 		int expressionIncrement = 1;
@@ -462,7 +462,7 @@ public class MidiSequenceParser {
 		}
 		sh.getSequence().addControlChange(getTick((start + duration)),track,channel, MidiControllers.EXPRESSION, 127);
 	}
-	
+
 	private void addTimeSignature(MidiSequenceHelper sh, TGMeasure currMeasure, TGMeasure prevMeasure, long startMove){
 		boolean addTimeSignature = false;
 		if (prevMeasure == null) {
@@ -480,7 +480,7 @@ public class MidiSequenceParser {
 			sh.getSequence().addTimeSignature(getTick(currMeasure.getStart() + startMove), getInfoTrack(), currMeasure.getTimeSignature());
 		}
 	}
-	
+
 	private void addTempo(MidiSequenceHelper sh,TGMeasure currMeasure, TGMeasure prevMeasure,long startMove){
 		boolean addTempo = false;
 		if (prevMeasure == null) {
@@ -495,7 +495,7 @@ public class MidiSequenceParser {
 			sh.getSequence().addTempoInUSQ(getTick(currMeasure.getStart() + startMove), getInfoTrack(), usq);
 		}
 	}
-	
+
 	private long getRealNoteDuration(MidiSequenceHelper sh, TGTrack track, TGNote note, TGTempo tempo, long duration,int mIndex, int bIndex) {
 		boolean letRing = (note.getEffect().isLetRing());
 		boolean letRingBeatChanged = false;
@@ -506,7 +506,7 @@ public class MidiSequenceParser {
 		for (int m = mIndex; m < mCount; m++) {
 			MidiMeasureHelper mh = sh.getMeasureHelper( m );
 			TGMeasure measure = track.getMeasure( mh.getIndex() );
-			
+
 			int beatCount = measure.countBeats();
 			for (int b = nextBIndex; b < beatCount; b++) {
 				TGBeat beat = measure.getBeat(b);
@@ -541,7 +541,7 @@ public class MidiSequenceParser {
 		}
 		return applyDurationEffects(note, tempo, realDuration);
 	}
-	
+
 	private long applyDurationEffects(TGNote note, TGTempo tempo, long duration){
 		//dead note
 		if(note.getEffect().isDeadNote()){
@@ -557,15 +557,15 @@ public class MidiSequenceParser {
 		}
 		return duration;
 	}
-	
+
 	private long applyStaticDuration(TGTempo tempo, long duration, long maximum ){
 		long value = ( tempo.getValue() * duration / 60 );
 		return (value < maximum ? value : maximum );
 	}
-	
+
 	private int getRealVelocity(MidiSequenceHelper sh, TGNote note, TGTrack tgTrack, TGChannel tgChannel, int mIndex,int bIndex){
 		int velocity = note.getVelocity();
-		
+
 		//Check for Hammer effect
 		if(!tgChannel.isPercussionChannel()){
 			MidiNoteHelper previousNote = getPreviousNote(sh, note,tgTrack,mIndex,bIndex,false);
@@ -573,7 +573,7 @@ public class MidiSequenceParser {
 				velocity = Math.max(TGVelocities.MIN_VELOCITY,(velocity - 25));
 			}
 		}
-		
+
 		//Check for GhostNote effect
 		if(note.getEffect().isGhostNote()){
 			velocity = Math.max(TGVelocities.MIN_VELOCITY,(velocity - TGVelocities.VELOCITY_INCREMENT));
@@ -582,10 +582,10 @@ public class MidiSequenceParser {
 		}else if(note.getEffect().isHeavyAccentuatedNote()){
 			velocity = Math.max(TGVelocities.MIN_VELOCITY,(velocity + (TGVelocities.VELOCITY_INCREMENT * 2)));
 		}
-		
+
 		return ((velocity > 127)?127:velocity);
 	}
-	
+
 	private int[] getStroke(TGBeat beat, TGBeat previous, int[] stroke){
 		int direction = beat.getStroke().getDirection();
 		if( previous == null || !(direction == TGStroke.STROKE_NONE && previous.getStroke().getDirection() == TGStroke.STROKE_NONE)){
@@ -621,15 +621,15 @@ public class MidiSequenceParser {
 		}
 		return stroke;
 	}
-	
+
 	private long applyStrokeStart( TGNote note, long start , int[] stroke){
 		return (start + stroke[ note.getString() - 1 ]);
 	}
-	
+
 	private long applyStrokeDuration( TGNote note, long duration , int[] stroke){
 		return (duration > stroke[note.getString() - 1] ? (duration - stroke[ note.getString() - 1 ]) : duration );
 	}
-	
+
 	private MidiTickHelper checkTripletFeel(TGVoice voice,int bIndex){
 		long bStart = voice.getBeat().getStart();
 		long bDuration =  voice.getDuration().getTime();
@@ -684,13 +684,13 @@ public class MidiSequenceParser {
 		}
 		return new MidiTickHelper(bStart, bDuration);
 	}
-	
+
 	private TGDuration newDuration(int value){
 		TGDuration duration = this.songManager.getFactory().newDuration();
 		duration.setValue(value);
 		return duration;
 	}
-	
+
 	private TGVoice getPreviousBeat(TGVoice beat,int bIndex){
 		TGVoice previous = null;
 		for (int b = bIndex - 1; b >= 0; b--) {
@@ -703,7 +703,7 @@ public class MidiSequenceParser {
 		}
 		return previous;
 	}
-	
+
 	private TGVoice getNextBeat(TGVoice beat,int bIndex){
 		TGVoice next = null;
 		for (int b = bIndex + 1; b < beat.getBeat().getMeasure().countBeats(); b++) {
@@ -716,13 +716,13 @@ public class MidiSequenceParser {
 		}
 		return next;
 	}
-	
-	private MidiNoteHelper getNextNote(MidiSequenceHelper sh, TGNote note,TGTrack track, int mIndex, int bIndex, boolean breakAtRest){ 
+
+	private MidiNoteHelper getNextNote(MidiSequenceHelper sh, TGNote note,TGTrack track, int mIndex, int bIndex, boolean breakAtRest){
 		int nextBIndex = (bIndex + 1);
 		int measureCount = sh.getMeasureHelpers().size();
 		for (int m = mIndex; m < measureCount; m++) {
 			MidiMeasureHelper mh = sh.getMeasureHelper( m );
-			
+
 			TGMeasure measure = track.getMeasure( mh.getIndex() );
 			int beatCount = measure.countBeats();
 			for (int b = nextBIndex; b < beatCount; b++) {
@@ -745,12 +745,12 @@ public class MidiSequenceParser {
 		}
 		return null;
 	}
-	
+
 	private MidiNoteHelper getPreviousNote(MidiSequenceHelper pHelper, TGNote note,TGTrack track, int mIndex, int bIndex, boolean breakAtRest){
 		int nextBIndex = bIndex;
 		for (int m = mIndex; m >= 0; m--) {
 			MidiMeasureHelper mh = pHelper.getMeasureHelper( m );
-			
+
 			TGMeasure measure = track.getMeasure( mh.getIndex() );
 			if( this.sHeader == -1 || this.sHeader <= measure.getNumber() ){
 				nextBIndex = (nextBIndex < 0 ? measure.countBeats() : nextBIndex);
@@ -775,93 +775,93 @@ public class MidiSequenceParser {
 		}
 		return null;
 	}
-	
+
 	private int fix(int value, int minimum, int maximum) {
 		return (value >= minimum ? value <= maximum ? value : maximum : minimum);
 	}
-	
+
 	private int fix(int value) {
 		return this.fix(value, 0, 127);
 	}
-	
+
 	private class MidiTickHelper{
 		private long start;
 		private long duration;
-		
+
 		public MidiTickHelper(long start,long duration){
 			this.start = start;
 			this.duration = duration;
 		}
-		
+
 		public long getDuration() {
 			return this.duration;
 		}
-		
+
 		public long getStart() {
 			return this.start;
 		}
 	}
-	
+
 	private class MidiNoteHelper {
-		
+
 		private MidiMeasureHelper measure;
 		private TGNote note;
-		
+
 		public MidiNoteHelper(MidiMeasureHelper measure, TGNote note){
 			this.measure = measure;
 			this.note = note;
 		}
-		
+
 		public MidiMeasureHelper getMeasure() {
 			return this.measure;
 		}
-		
+
 		public TGNote getNote() {
 			return this.note;
 		}
 	}
-	
+
 	private class MidiMeasureHelper {
-		
+
 		private int index;
 		private long move;
-		
+
 		public MidiMeasureHelper(int index,long move){
 			this.index = index;
 			this.move = move;
 		}
-		
+
 		public int getIndex() {
 			return this.index;
 		}
-		
+
 		public long getMove() {
 			return this.move;
 		}
 	}
-	
+
 	private class MidiSequenceHelper {
-		
+
 		private List<MidiMeasureHelper> measureHeaderHelpers;
 		private MidiSequenceHandler sequence;
-		
+
 		public MidiSequenceHelper(MidiSequenceHandler sequence){
 			this.sequence = sequence;
 			this.measureHeaderHelpers = new ArrayList<MidiMeasureHelper>();
 		}
-		
+
 		public MidiSequenceHandler getSequence(){
 			return this.sequence;
 		}
-		
+
 		public void addMeasureHelper( MidiMeasureHelper helper ){
 			this.measureHeaderHelpers.add( helper );
 		}
-		
+
 		public List<MidiMeasureHelper> getMeasureHelpers(){
 			return this.measureHeaderHelpers;
 		}
-		
+
 		public MidiMeasureHelper getMeasureHelper( int index ){
 			return (MidiMeasureHelper)this.measureHeaderHelpers.get( index );
 		}

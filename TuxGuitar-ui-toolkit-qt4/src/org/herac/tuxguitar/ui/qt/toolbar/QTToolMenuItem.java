@@ -11,12 +11,12 @@ import com.trolltech.qt.core.QSize;
 import com.trolltech.qt.gui.QToolButton;
 
 public class QTToolMenuItem extends QTToolAbstractButtonItem<QToolButton> implements UIToolMenuItem {
-	
+
 	private UIPopupMenu menu;
-	
+
 	public QTToolMenuItem(QTToolBar parent) {
 		super(new QToolButton(parent.getControl()), parent);
-		
+
 		this.menu = new QTPopupMenu();
 		this.getControl().clicked.connect(this, "openMenu()");
 	}
@@ -24,11 +24,11 @@ public class QTToolMenuItem extends QTToolAbstractButtonItem<QToolButton> implem
 	public UIMenu getMenu() {
 		return this.menu;
 	}
-	
+
 	public void openMenu() {
 		QSize size = this.getControl().size();
 		QPoint position = this.getControl().mapToGlobal(new QPoint(0, size.height()));
-		
+
 		this.menu.open(new UIPosition(position.x(), position.y()));
 	}
 }

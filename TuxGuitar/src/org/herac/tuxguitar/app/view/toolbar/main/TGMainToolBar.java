@@ -10,26 +10,26 @@ import org.herac.tuxguitar.util.singleton.TGSingletonFactory;
 import org.herac.tuxguitar.util.singleton.TGSingletonUtil;
 
 public class TGMainToolBar extends TGToolBarModel {
-	
+
 	private UIToolBar control;
-	
+
 	private TGMainToolBar(TGContext context) {
 		super(context);
 	}
-	
+
 	public void createToolBar(UIContainer parent, boolean visible){
 		UIFactory uiFactory = TGApplication.getInstance(this.getContext()).getFactory();
 		this.control = uiFactory.createHorizontalToolBar(parent);
 		this.control.setVisible(visible);
 		this.createSections();
 	}
-	
+
 	public void createSection(TGMainToolBarSection section) {
 		section.createSection();
-		
+
 		this.addSection(section);
 	}
-	
+
 	public void createSections() {
 		this.clearSections();
 		this.createSection(new TGMainToolBarSectionFile(this));
@@ -46,11 +46,11 @@ public class TGMainToolBar extends TGToolBarModel {
 		this.createSection(new TGMainToolBarSectionDivider(this));
 		this.createSection(new TGMainToolBarSectionTransport(this));
 	}
-	
+
 	public UIToolBar getControl() {
 		return control;
 	}
-	
+
 	public static TGMainToolBar getInstance(TGContext context) {
 		return TGSingletonUtil.getInstance(context, TGMainToolBar.class.getName(), new TGSingletonFactory<TGMainToolBar>() {
 			public TGMainToolBar createInstance(TGContext context) {

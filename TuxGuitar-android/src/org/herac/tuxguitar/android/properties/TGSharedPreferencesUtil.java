@@ -5,7 +5,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 public class TGSharedPreferencesUtil {
-	
+
 	public static String getSharedPreferencesName(Activity activity, String module, String resource) {
 		return (TGSharedPreferencesUtil.getPreferencesPrefix(activity) + "." + module + "-" + resource);
 	}

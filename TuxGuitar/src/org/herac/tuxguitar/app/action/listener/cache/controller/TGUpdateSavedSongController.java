@@ -17,22 +17,22 @@ public class TGUpdateSavedSongController extends TGUpdateItemsController {
 
 	@Override
 	public void update(TGContext context, TGActionContext actionContext) {
-		// ------------------------------------------------------ //		
+		// ------------------------------------------------------ //
 		TGUndoableManager.getInstance(context).discardAllEdits();
-		
+
 		TGDocument tgDocument = TGDocumentListManager.getInstance(context).findCurrentDocument();
 		tgDocument.setUnwanted(false);
 		tgDocument.setUnsaved(false);
-		
+
 		TGFileHistory tgFileHistory = TGFileHistory.getInstance(context);
 		tgFileHistory.reset(null);
-		
+
 		TGTransport.getInstance(context).getCache().reset();
 		TGWindow.getInstance(context).loadTitle();
 		// ------------------------------------------------------ //
-		
+
 		this.findUpdateBuffer(context, actionContext).requestUpdateSavedSong();
-		
+
 		super.update(context, actionContext);
 	}
 }

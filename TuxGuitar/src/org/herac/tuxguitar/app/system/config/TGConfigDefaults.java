@@ -10,21 +10,21 @@ import org.herac.tuxguitar.util.properties.TGPropertiesManager;
 import org.herac.tuxguitar.util.properties.TGPropertiesUtil;
 
 public class TGConfigDefaults{
-	
+
 	public static final String RESOURCE = "config-defaults";
 	public static final String MODULE = "tuxguitar";
-	
+
 	private static final String DEFAULT_FONT_NAME = UIFontModel.DEFAULT_NAME;
-	
+
 	public static TGProperties createDefaults(){
 		TGPropertiesManager propertiesManager = TuxGuitar.getInstance().getPropertiesManager();
 		TGProperties properties = propertiesManager.createProperties();
 		TGConfigDefaults.loadProperties( properties );
 		propertiesManager.readProperties(properties, RESOURCE, MODULE);
-		
+
 		return properties;
 	}
-	
+
 	public static void loadProperties(TGProperties properties){
 		loadProperty(properties, TGConfigKeys.SKIN, "Lavender");
 		loadProperty(properties, TGConfigKeys.WINDOW_TITLE, "${appname} - ${filename}");
@@ -95,7 +95,7 @@ public class TGConfigDefaults{
 		loadProperty(properties, TGConfigKeys.MATRIX_COLOR_LINE_3,"173,216,230");
 		loadProperty(properties, TGConfigKeys.TABLE_AUTO_SIZE,true);
 		loadProperty(properties, TGConfigKeys.BROWSER_LINES_VISIBLE,true);
-		
+
 		loadProperty(properties, TGConfigKeys.STYLE_MIN_BUFFER_SEPARATOR, 20);
 		loadProperty(properties, TGConfigKeys.STYLE_MIN_TOP_SPACING, 30);
 		loadProperty(properties, TGConfigKeys.STYLE_MIN_SCORE_TAB_SPACING, 20);
@@ -124,19 +124,19 @@ public class TGConfigDefaults{
 		loadProperty(properties, TGConfigKeys.STYLE_LINE_WIDTHS, new float[] {0f, 1f, 2f, 3f, 4f, 5f});
 		loadProperty(properties, TGConfigKeys.STYLE_DURATION_WIDTHS, new float[] {30f, 25f, 21f, 20f, 19f,18f});
 	}
-	
+
 	private static void loadProperty(TGProperties properties, String key,String value){
 		properties.setValue(key,value);
 	}
-	
+
 	private static void loadProperty(TGProperties properties, String key,int value){
 		properties.setValue(key,Integer.toString(value));
 	}
-	
+
 	private static void loadProperty(TGProperties properties, String key,boolean value){
 		properties.setValue(key,Boolean.toString(value));
 	}
-	
+
 	private static void loadProperty(TGProperties properties, String key, float[] value) {
 		TGPropertiesUtil.setValue(properties, key, value);
 	}

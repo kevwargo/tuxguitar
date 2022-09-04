@@ -18,7 +18,7 @@ import org.herac.tuxguitar.ui.menu.UIMenuActionItem;
 import org.herac.tuxguitar.ui.menu.UIMenuSubMenuItem;
 
 public class MeasureMenuItem extends TGMenuItem {
-	
+
 	private UIMenuSubMenuItem measureMenuItem;
 	private UIMenuActionItem first;
 	private UIMenuActionItem last;
@@ -29,35 +29,35 @@ public class MeasureMenuItem extends TGMenuItem {
 	private UIMenuActionItem removeMeasure;
 	private UIMenuActionItem copyMeasure;
 	private UIMenuActionItem pasteMeasure;
-	
+
 	public MeasureMenuItem(UIMenu parent) {
 		this.measureMenuItem = parent.createSubMenuItem();
 	}
-	
+
 	public void showItems(){
 		//--first--
 		this.first = this.measureMenuItem.getMenu().createActionItem();
 		this.first.addSelectionListener(this.createActionProcessor(TGGoFirstMeasureAction.NAME));
-		
+
 		//--previous--
 		this.previous = this.measureMenuItem.getMenu().createActionItem();
 		this.previous.addSelectionListener(this.createActionProcessor(TGGoPreviousMeasureAction.NAME));
-		
+
 		//--next--
 		this.next = this.measureMenuItem.getMenu().createActionItem();
 		this.next.addSelectionListener(this.createActionProcessor(TGGoNextMeasureAction.NAME));
-		
+
 		//--last--
 		this.last = this.measureMenuItem.getMenu().createActionItem();
 		this.last.addSelectionListener(this.createActionProcessor(TGGoLastMeasureAction.NAME));
-		
+
 		//--SEPARATOR
 		this.measureMenuItem.getMenu().createSeparator();
-		
+
 		//--add--
 		this.addMeasure = this.measureMenuItem.getMenu().createActionItem();
 		this.addMeasure.addSelectionListener(this.createActionProcessor(TGOpenMeasureAddDialogAction.NAME));
-		
+
 		//--clean--
 		this.cleanMeasure = this.measureMenuItem.getMenu().createActionItem();
 		this.cleanMeasure.addSelectionListener(this.createActionProcessor(TGOpenMeasureCleanDialogAction.NAME));
@@ -65,23 +65,23 @@ public class MeasureMenuItem extends TGMenuItem {
 		//--remove--
 		this.removeMeasure = this.measureMenuItem.getMenu().createActionItem();
 		this.removeMeasure.addSelectionListener(this.createActionProcessor(TGOpenMeasureRemoveDialogAction.NAME));
-		
+
 		//--SEPARATOR
 		this.measureMenuItem.getMenu().createSeparator();
-		
+
 		//--copy--
 		this.copyMeasure = this.measureMenuItem.getMenu().createActionItem();
 		this.copyMeasure.addSelectionListener(this.createActionProcessor(TGOpenMeasureCopyDialogAction.NAME));
-		
+
 		//--paste--
 		this.pasteMeasure = this.measureMenuItem.getMenu().createActionItem();
-		
+
 		this.pasteMeasure.addSelectionListener(this.createActionProcessor(TGOpenMeasurePasteDialogAction.NAME));
-		
+
 		this.loadIcons();
 		this.loadProperties();
 	}
-	
+
 	public void update(){
 		TGMeasureImpl measure = TuxGuitar.getInstance().getTablatureEditor().getTablature().getCaret().getMeasure();
 		boolean running = TuxGuitar.getInstance().getPlayer().isRunning();
@@ -97,7 +97,7 @@ public class MeasureMenuItem extends TGMenuItem {
 		this.copyMeasure.setEnabled(!running);
 		this.pasteMeasure.setEnabled(!running && TGClipboard.getInstance(findContext()).getData() != null);
 	}
-	
+
 	public void loadProperties(){
 		setMenuItemTextAndAccelerator(this.measureMenuItem, "measure", null);
 		setMenuItemTextAndAccelerator(this.first, "measure.first", TGGoFirstMeasureAction.NAME);
@@ -110,7 +110,7 @@ public class MeasureMenuItem extends TGMenuItem {
 		setMenuItemTextAndAccelerator(this.copyMeasure, "measure.copy", TGOpenMeasureCopyDialogAction.NAME);
 		setMenuItemTextAndAccelerator(this.pasteMeasure, "measure.paste", TGOpenMeasurePasteDialogAction.NAME);
 	}
-	
+
 	public void loadIcons(){
 		//Nothing to do
 	}

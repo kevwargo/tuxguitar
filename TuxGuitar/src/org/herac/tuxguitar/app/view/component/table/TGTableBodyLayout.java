@@ -7,23 +7,23 @@ import org.herac.tuxguitar.ui.widget.UIControl;
 import org.herac.tuxguitar.ui.widget.UILayoutContainer;
 
 public class TGTableBodyLayout extends UITableLayout {
-	
+
 	private float rowHeight;
-	
+
 	public TGTableBodyLayout() {
 		super(0f);
 	}
-	
+
 	public void computeChildrenPackedSize(UILayoutContainer container) {
 		super.computeChildrenPackedSize(container);
-		
+
 		this.rowHeight = 0f;
-		
+
 		List<UIControl> controls = container.getChildren();
 		for(UIControl control : controls) {
 			this.rowHeight = Math.max(this.rowHeight, control.getPackedSize().getHeight());
 		}
-		
+
 		int row = 0;
 		for(UIControl control : controls) {
 			this.set(control, (++row), 1, UITableLayout.ALIGN_FILL, UITableLayout.ALIGN_FILL, true, true);
@@ -33,7 +33,7 @@ public class TGTableBodyLayout extends UITableLayout {
 			this.computeChildPackedSize(control);
 		}
 	}
-	
+
 	public float getRowHeight() {
 		return this.rowHeight;
 	}

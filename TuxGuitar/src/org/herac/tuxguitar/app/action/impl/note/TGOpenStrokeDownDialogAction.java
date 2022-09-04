@@ -10,13 +10,13 @@ import org.herac.tuxguitar.song.models.TGStroke;
 import org.herac.tuxguitar.util.TGContext;
 
 public class TGOpenStrokeDownDialogAction extends TGActionBase{
-	
+
 	public static final String NAME = "action.gui.open-stroke-down-dialog";
-	
+
 	public TGOpenStrokeDownDialogAction(TGContext context) {
 		super(context, NAME);
 	}
-	
+
 	protected void processAction(TGActionContext tgActionContext){
 		tgActionContext.setAttribute(TGOpenViewAction.ATTRIBUTE_CONTROLLER, new TGStrokeDialogController());
 		tgActionContext.setAttribute(TGChangeStrokeAction.ATTRIBUTE_STROKE_DIRECTION, TGStroke.STROKE_DOWN);

@@ -30,15 +30,15 @@ import org.herac.tuxguitar.ui.resource.UIResourceFactory;
 
 /**
  * @author julian
- * 
+ *
  * TODO To change the template for this generated type comment go to Window - Preferences - Java - Code Style - Code Templates
  */
 public class TGMeasureImpl extends TGMeasure{
-	
+
 	public static final int NATURAL = 1;
 	public static final int SHARP = 2;
 	public static final int FLAT = 3;
-	
+
 	public static final int KEY_SIGNATURES[][] = new int[][]{
 		//------------NATURAL------------------------------------
 		{NATURAL,NATURAL,NATURAL,NATURAL,NATURAL,NATURAL,NATURAL}, // NATURAL
@@ -59,35 +59,35 @@ public class TGMeasureImpl extends TGMeasure{
 		{FLAT,FLAT,FLAT,NATURAL,FLAT,FLAT,FLAT},                   // 6 FLATS
 		{FLAT,FLAT,FLAT,FLAT,FLAT,FLAT,FLAT},                      // 7 FLATS
 	};
-	
+
 	public static final int ACCIDENTAL_SHARP_NOTES[] = new int[]{0,0,1,1,2,3,3,4,4,5,5,6};
 	public static final int ACCIDENTAL_FLAT_NOTES [] = new int[]{0,1,1,2,2,3,4,4,5,5,6,6};
 	public static final boolean ACCIDENTAL_NOTES[] = new boolean[]{false,true,false,true,false,false,true,false,true,false,true,false};
-	
-	public static final int SCORE_KEY_SHARP_POSITIONS[][] = new int[][]{ 
+
+	public static final int SCORE_KEY_SHARP_POSITIONS[][] = new int[][]{
 		new int[] { 1 , 4, 0, 3, 6, 2 , 5 } ,
 		new int[] { 3 , 6, 2, 5, 8, 4 , 7 } ,
 		new int[] { 7 , 3, 6, 2, 5, 1 , 4 } ,
 		new int[] { 2 , 5, 1, 4, 7, 3 , 6 } ,
 	};
-	
-	public static final int SCORE_KEY_FLAT_POSITIONS[][] = new int[][]{ 
+
+	public static final int SCORE_KEY_FLAT_POSITIONS[][] = new int[][]{
 		new int[] { 5, 2, 6, 3, 7, 4, 8 } ,
 		new int[] { 7, 4, 8, 5, 9, 6, 10 } ,
 		new int[] { 4, 1, 5, 2, 6, 3, 7 } ,
 		new int[] { 6, 3, 7, 4, 8, 5, 9 } ,
 	};
-	
+
 	/**
 	 * Espacio por defecto de la clave
 	 */
 	private static final int DEFAULT_CLEF_WIDTH = 16;
-	
+
 	/**
 	 * Posicion X
 	 */
 	private float posX;
-	/** 
+	/**
 	 * Posicion Y
 	 */
 	private float posY;
@@ -119,42 +119,42 @@ public class TGMeasureImpl extends TGMeasure{
 	 * Boolean para saber si el compas es el primero de la linea
 	 */
 	private boolean firstOfLine;
-	
+
 	private boolean compactMode;
-	
+
 	private float spacing;
-	
+
 	private TGTrackSpacing ts;
-	
+
 	private float maxY;
-	
+
 	private float minY;
-	
+
 	private int notEmptyVoices;
-	
+
 	private int notEmptyBeats;
-	
+
 	private float widthBeats = 0;
-	
+
 	private List<TGBeatGroup>[] voiceGroups;
-	
+
 	private TGMeasureBuffer buffer;
-	
+
 	private boolean bufferCreated;
-	
+
 	private int lyricBeatIndex;
 	private float width;
-	
+
 	private float beatEffectSpacing;
 	private boolean text;
 	private boolean chord;
 	private boolean division1;
 	private boolean division2;
-	
+
 	private boolean[][] registeredAccidentals;
-	
+
 	private boolean readyToPaint;
-	
+
 	@SuppressWarnings("unchecked")
 	public TGMeasureImpl(TGMeasureHeader header) {
 		super(header);
@@ -165,7 +165,7 @@ public class TGMeasureImpl extends TGMeasure{
 			this.voiceGroups[v] = new ArrayList<TGBeatGroup>();
 		}
 	}
-	
+
 	/**
 	 * Crea los valores necesarios
 	 */
@@ -181,7 +181,7 @@ public class TGMeasureImpl extends TGMeasure{
 		this.calculateWidth(layout);
 		this.setFirstOfLine(false);
 	}
-	
+
 	/**
 	 * Actualiza los valores para dibujar
 	 */
@@ -192,7 +192,7 @@ public class TGMeasureImpl extends TGMeasure{
 		this.setBufferCreated(false);
 		this.readyToPaint = true;
 	}
-	
+
 	private void checkCompactMode(TGLayout layout){
 		boolean compactMode = ( (layout.getStyle() & TGLayout.DISPLAY_COMPACT) != 0 );
 		if(compactMode && (layout.getStyle() & TGLayout.DISPLAY_MULTITRACK) != 0){
@@ -200,7 +200,7 @@ public class TGMeasureImpl extends TGMeasure{
 		}
 		this.compactMode = compactMode;
 	}
-	
+
 	private void clearRegisteredAccidentals(){
 		for( int i = 0 ; i < 11 ; i ++ ){
 			for( int n = 0 ; n < 7 ; n ++ ){
@@ -208,7 +208,7 @@ public class TGMeasureImpl extends TGMeasure{
 			}
 		}
 	}
-	
+
 	public void calculateWidth(TGLayout layout) {
 		if( this.compactMode ){
 			this.width = this.widthBeats;
@@ -217,25 +217,25 @@ public class TGMeasureImpl extends TGMeasure{
 			float quartersInSignature = ((1f / ((float)this.getTimeSignature().getDenominator().getValue())) * 4f) * ((float)this.getTimeSignature().getNumerator());
 			this.width = (getQuarterSpacing() * quartersInSignature);
 		}
-		
+
 		this.width += getFirstNoteSpacing(layout);
 		this.width += (this.getRepeatClose() > 0) ? (20f * layout.getScale()) : 0;
 		this.width += getHeaderImpl().getLeftSpacing(layout);
 		this.width += getHeaderImpl().getRightSpacing(layout);
-		
+
 		this.getHeaderImpl().notifyWidth(this.width);
 	}
-	
+
 	private void calculateBeats(TGLayout layout) {
 		TGChord previousChord = null;
 		TGDuration minDuration = null;
 		TGBeatImpl previousBeat = null;
 		TGVoiceImpl[] previousVoices = new TGVoiceImpl[TGBeat.MAX_VOICES];
 		TGBeatGroup[] groups = new TGBeatGroup[TGBeat.MAX_VOICES];
-		
+
 		int style = layout.getStyle();
 		long minimumChordLength = 0;
-		
+
 		boolean[] notEmptyVoicesChecked = new boolean[TGBeat.MAX_VOICES];
 		boolean chordEnabled = ((style & (TGLayout.DISPLAY_CHORD_DIAGRAM | TGLayout.DISPLAY_CHORD_NAME)) != 0);
 		this.widthBeats = 0;
@@ -244,11 +244,11 @@ public class TGMeasureImpl extends TGMeasure{
 		for(int v = 0 ; v < TGBeat.MAX_VOICES; v ++){
 			this.voiceGroups[v].clear();
 		}
-		
+
 		for (int i = 0; i < countBeats(); i++) {
 			TGBeatImpl beat = (TGBeatImpl)getBeat(i);
 			beat.reset();
-			
+
 			if(chordEnabled && beat.getChord() != null){
 				if(previousChord != null){
 					long length = (beat.getStart() - previousChord.getBeat().getStart());
@@ -261,7 +261,7 @@ public class TGMeasureImpl extends TGMeasure{
 				TGVoiceImpl voice = (TGVoiceImpl)beat.getVoice(v);
 				if(!voice.isEmpty()){
 					emptyBeat = false;
-					
+
 					voice.reset();
 					if (minDuration == null || voice.getDuration().getTime() <= minDuration.getTime()) {
 						minDuration = voice.getDuration();
@@ -270,13 +270,13 @@ public class TGMeasureImpl extends TGMeasure{
 						notEmptyVoicesChecked[v] = true;
 						this.notEmptyVoices ++;
 					}
-					
+
 					Iterator<TGNote> it = voice.getNotes().iterator();
 					while(it.hasNext()){
 						TGNoteImpl note = (TGNoteImpl)it.next();
 						voice.check(layout, note);
 					}
-					
+
 					if(!voice.isRestVoice()){
 						beat.check( layout, voice.getMinNote() );
 						beat.check( layout, voice.getMaxNote() );
@@ -305,11 +305,11 @@ public class TGMeasureImpl extends TGMeasure{
 			if (emptyBeat){
 				System.out.println( "Empty Beat !!!!!! " + beat.getStart() + "  " + i);
 			}
-			
+
 			makeBeat(layout,beat,previousBeat,chordEnabled);
 			previousBeat = beat;
 		}
-		
+
 		for(int v = 0; v < this.voiceGroups.length; v ++){
 			Iterator<TGBeatGroup> voiceGroups = this.voiceGroups[v].iterator();
 			while (voiceGroups.hasNext()) {
@@ -317,7 +317,7 @@ public class TGMeasureImpl extends TGMeasure{
 				group.finish(layout,this);
 			}
 		}
-		
+
 		if(!this.compactMode) {
 			this.quarterSpacing = (minDuration != null ? layout.getSpacingForQuarter(minDuration): layout.getMinimumDurationWidth());
 			if(chordEnabled && minimumChordLength > 0){
@@ -328,37 +328,37 @@ public class TGMeasureImpl extends TGMeasure{
 			this.getHeaderImpl().notifyQuarterSpacing(this.quarterSpacing);
 		}
 	}
-	
+
 	public boolean canJoin(TGSongManager manager,TGVoiceImpl b1,TGVoiceImpl b2){
 		if( b1 == null || b2 == null || b1.isRestVoice() || b2.isRestVoice() ){
 			return false;
 		}
-		
+
 		long divisionLength = getDivisionLength();
 		long start = getStart();
 		long start1 = (manager.getMeasureManager().getRealStart(this, b1.getBeat().getStart()) - start);
 		long start2 = (manager.getMeasureManager().getRealStart(this, b2.getBeat().getStart()) - start);
-		
+
 		if(b1.getDuration().getValue() < TGDuration.EIGHTH || b2.getDuration().getValue() < TGDuration.EIGHTH ){
 			return ( start1 == start2);
 		}
-		
+
 		long p1 = ((divisionLength + start1) / divisionLength);
 		long p2 = ((divisionLength + start2) / divisionLength);
-		
+
 		return  (   p1 == p2  );
 	}
-	
+
 	private void makeVoice(TGLayout layout,TGVoiceImpl voice,TGVoiceImpl previousVoice,TGBeatGroup group){
 		voice.setWidth(layout.getDurationWidth(voice.getDuration()));
 		voice.setBeatGroup( group );
-		
+
 		if(previousVoice != null){
 			voice.setPreviousBeat(previousVoice);
 			previousVoice.setNextBeat(voice);
 		}
 	}
-	
+
 	private void makeBeat(TGLayout layout,TGBeatImpl beat,TGBeatImpl previousBeat, boolean chordEnabled){
 		float minimumWidth = -1;
 		boolean restBeat = true;
@@ -373,15 +373,15 @@ public class TGMeasureImpl extends TGMeasure{
 				}
 			}
 		}
-		
+
 		beat.setWidth( minimumWidth );
 		this.notEmptyBeats += (restBeat ? 0 : 1);
 		this.widthBeats += beat.getMinimumWidth();
-		
+
 		if(previousBeat != null){
 			beat.setPreviousBeat(previousBeat);
 			previousBeat.setNextBeat(beat);
-			
+
 			if(chordEnabled && beat.isChordBeat() && previousBeat.isChordBeat()){
 				float previousWidth = previousBeat.getMinimumWidth();
 				float chordWidth = (layout.getChordFretIndexSpacing() + layout.getChordStringSpacing() + (getTrack().stringCount() * layout.getChordStringSpacing()));
@@ -391,7 +391,7 @@ public class TGMeasureImpl extends TGMeasure{
 			}
 		}
 	}
-	
+
 	/**
 	 * Calcula si debe pintar el TimeSignature
 	 */
@@ -410,20 +410,20 @@ public class TGMeasureImpl extends TGMeasure{
 			}
 		}
 	}
-	
+
 	/**
 	 * Calcula si hay espacios libres. y crea nuevos silencios
 	 */
 	private void autoCompleteSilences(TGSongManager manager){
 		manager.getMeasureManager().autoCompleteSilences(this);
 	}
-	
+
 	public void registerBuffer(TGLayout layout) {
 		TGResourceBuffer buffer = layout.getResourceBuffer();
-		
+
 		// Measure Buffer
 		this.getBuffer().register(buffer);
-		
+
 		// Marker Color
 		String markerKey = this.getMarkerRegistryKey();
 		if( this.hasMarker() ) {
@@ -432,21 +432,21 @@ public class TGMeasureImpl extends TGMeasure{
 			buffer.unregister(markerKey);
 		}
 	}
-	
+
 	/**
 	 * Llama a update de todas las notas del compas
 	 */
 	private void updateComponents(TGLayout layout) {
 		this.maxY = 0;
 		this.minY = 0;
-		
+
 		float spacing = getFirstNoteSpacing(layout);
 		float tmpX = spacing;
 		for (int i = 0; i < countBeats(); i++) {
 			TGBeatImpl beat = (TGBeatImpl) getBeat(i);
 			beat.registerBuffer(layout);
 			beat.resetEffectsSpacing(layout);
-			
+
 			if(this.compactMode){
 				beat.setPosX(tmpX);
 				tmpX += beat.getMinimumWidth();
@@ -469,7 +469,7 @@ public class TGMeasureImpl extends TGMeasure{
 				beat.setPosX( x1 );
 				beat.setWidth( minimumWidth );
 			}
-			
+
 			for(int v = 0 ; v < beat.countVoices(); v ++){
 				TGVoiceImpl voice = beat.getVoiceImpl(v);
 				if(!voice.isEmpty()){
@@ -480,7 +480,7 @@ public class TGMeasureImpl extends TGMeasure{
 						note.update(layout);
 					}
 					voice.update(layout);
-					
+
 					if(!this.division1 && (v % 2 == 0) && !voice.getDuration().getDivision().isEqual(TGDivisionType.NORMAL)){
 						this.division1 = true;
 					}
@@ -497,21 +497,21 @@ public class TGMeasureImpl extends TGMeasure{
 					}
 				}
 			}
-			
+
 			float bsSize = beat.getEffectsSpacing(layout);
 			if( bsSize > this.beatEffectSpacing ){
 				this.beatEffectSpacing = bsSize;
 			}
-			
+
 			if(!this.chord && beat.isChordBeat()){
 				this.chord = true;
 			}
-			
+
 			if(!this.text && beat.isTextBeat()){
 				this.text = true;
 			}
 		}
-		
+
 		if( (layout.getStyle() & TGLayout.DISPLAY_SCORE) != 0){
 			for(int i = 0; i < this.voiceGroups.length; i ++){
 				Iterator<TGBeatGroup> groups = this.voiceGroups[i].iterator();
@@ -523,7 +523,7 @@ public class TGMeasureImpl extends TGMeasure{
 			}
 		}
 	}
-	
+
 	public float getDisplayPosition(long start, float quarterWidth){
 		long newStart = (start - this.getStart());
 		float displayPosition = 0f;
@@ -533,7 +533,7 @@ public class TGMeasureImpl extends TGMeasure{
 		}
 		return displayPosition;
 	}
-	
+
 	public int getNoteAccidental(int noteValue){
 		if( noteValue >= 0 && noteValue < 128 ){
 			int key = getKeySignature();
@@ -543,12 +543,12 @@ public class TGMeasureImpl extends TGMeasure{
 			int [] accidentalNotes = (key <= 7 ? ACCIDENTAL_SHARP_NOTES : ACCIDENTAL_FLAT_NOTES );
 			boolean isAccidentalNote = ACCIDENTAL_NOTES[ note ];
 			boolean isAccidentalKey = KEY_SIGNATURES[key][accidentalNotes[ note ]] == accidentalValue;
-			
+
 			if(isAccidentalKey != isAccidentalNote && !this.registeredAccidentals[ octave ][ accidentalNotes[ note ] ]){
 				this.registeredAccidentals[ octave ][ accidentalNotes[note ]  ] = true;
 				return (isAccidentalNote ? accidentalValue : NATURAL);
 			}
-			
+
 			if(isAccidentalKey == isAccidentalNote && this.registeredAccidentals[ octave ][ accidentalNotes[ note ] ]){
 				this.registeredAccidentals[ octave ][ accidentalNotes[ note ]  ] = false;
 				return (isAccidentalNote ? accidentalValue : NATURAL);
@@ -556,25 +556,25 @@ public class TGMeasureImpl extends TGMeasure{
 		}
 		return 0;
 	}
-	
+
 	private void checkValue(TGLayout layout, TGNoteImpl note, int direction){
 		float y = note.getScorePosY();
 		float upOffset = TGBeatGroup.getUpOffset(layout);
 		float downOffset = TGBeatGroup.getDownOffset(layout);
-		
+
 		if(direction == TGBeatGroup.DIRECTION_UP && y > this.maxY ){
 			this.maxY = y;
 		}else if(direction == TGBeatGroup.DIRECTION_DOWN && (y + downOffset) > this.maxY ){
 			this.maxY = (y + downOffset + 2f);
 		}
-		
+
 		if(direction == TGBeatGroup.DIRECTION_UP && (y - upOffset) < this.minY ){
 			this.minY = (y - upOffset - 2f);
 		}else if(direction == TGBeatGroup.DIRECTION_DOWN && y < this.minY ){
 			this.minY = y;
 		}
 	}
-	
+
 	private void resetSpacing(){
 		this.text = false;
 		this.chord = false;
@@ -582,7 +582,7 @@ public class TGMeasureImpl extends TGMeasure{
 		this.division2 = false;
 		this.beatEffectSpacing = 0;
 	}
-	
+
 	public void registerSpacing(TGLayout layout,TGTrackSpacing ts){
 		if(layout.hasLoopMarker( this.getHeader() )){
 			ts.setSize(TGTrackSpacing.POSITION_LOOP_MARKER,layout.getLoopMarkerSpacing());
@@ -609,18 +609,18 @@ public class TGMeasureImpl extends TGMeasure{
 			ts.setSize(TGTrackSpacing.POSITION_EFFECTS, this.beatEffectSpacing );
 		}
 	}
-	
+
 	private void orderBeats(TGSongManager manager){
 		manager.getMeasureManager().orderBeats(this);
 	}
-	
+
 	public void paintMeasure(TGLayout layout,UIPainter painter) {
 		if( this.readyToPaint ) {
 			this.setOutOfBounds(false);
-			
+
 			boolean bufferEnabled = layout.isBufferEnabled();
 			TGResourceBuffer resourceBuffer = layout.getResourceBuffer();
-			
+
 			if(!bufferEnabled || shouldRepaintBuffer(resourceBuffer)){
 				UIPainter bufferPainter = painter;
 				float x = (bufferEnabled ? 0 : getPosX());
@@ -635,7 +635,7 @@ public class TGMeasureImpl extends TGMeasure{
 				paintKeySignature(layout, bufferPainter, x, y);
 				paintComponents(layout, bufferPainter, x, y);
 				if( bufferEnabled ){
-					bufferPainter.dispose(); 
+					bufferPainter.dispose();
 				}
 				setBufferCreated(true);
 			}
@@ -643,7 +643,7 @@ public class TGMeasureImpl extends TGMeasure{
 				painter.setBackground(layout.getResources().getBackgroundColor());
 				getBuffer().paintBuffer(resourceBuffer, painter, getPosX(), getPosY());
 			}
-			
+
 			this.paintMarker(layout, painter);
 			this.paintTexts(layout,painter);
 			this.paintTempo(layout,painter);
@@ -654,11 +654,11 @@ public class TGMeasureImpl extends TGMeasure{
 			this.paintLoopMarker(layout, painter);
 		}
 	}
-	
+
 	private boolean shouldRepaintBuffer(TGResourceBuffer resourceBuffer){
 		return (!isBufferCreated() || getBuffer().isDisposed(resourceBuffer));
 	}
-	
+
 	public void paintRepeatEnding(TGLayout layout,UIPainter painter){
 		if(getHeader().getRepeatAlternative() > 0){
 			float scale = layout.getScale();
@@ -683,22 +683,22 @@ public class TGMeasureImpl extends TGMeasure{
 			painter.drawString(string, (x1 + (5.0f * scale)), (y1 + painter.getFMTopLine() + (4f * scale)));
 		}
 	}
-	
+
 	/**
 	 * Pinta las notas
 	 */
 	public void paintComponents(TGLayout layout,UIPainter painter, float fromX, float fromY) {
 		float x = (fromX + getHeaderImpl().getLeftSpacing(layout));
-		
+
 		Iterator<TGBeat> it = getBeats().iterator();
 		while(it.hasNext()) {
 			TGBeatImpl beat = (TGBeatImpl)it.next();
 			beat.paint(layout, painter, x, fromY);
 		}
-		
+
 		this.paintDivisionTypes(layout, painter, x, fromY);
 	}
-	
+
 	public void paintDivisionTypes(TGLayout layout, UIPainter painter, float fromX, float fromY){
 		for(int v = 0; v < TGBeat.MAX_VOICES; v ++) {
 			if((this.division1 && v % 2 == 0) || (this.division2 && v % 2 == 1)) {
@@ -706,23 +706,23 @@ public class TGMeasureImpl extends TGMeasure{
 			}
 		}
 	}
-	
+
 	public void paintDivisionTypes(TGLayout layout, UIPainter painter, float fromX, float fromY, int voiceIndex){
 		float x1 = 0;
 		float x2 = 0;
-		
+
 		TGDivisionType divisionType = null;
 		Iterator<TGBeat> it = getBeats().iterator();
 		while(it.hasNext()) {
 			TGBeatImpl beat = (TGBeatImpl)it.next();
-			TGVoiceImpl voice = beat.getVoiceImpl(voiceIndex);				
+			TGVoiceImpl voice = beat.getVoiceImpl(voiceIndex);
 			if( !voice.isEmpty() ) {
 				if( divisionType != null && !voice.getDuration().getDivision().isEqual(divisionType) ) {
 					this.paintDivisionType(layout, painter, divisionType, x1, x2, fromY, voiceIndex);
-					
+
 					divisionType = null;
 				}
-				
+
 				if(!voice.getDuration().getDivision().isEqual(TGDivisionType.NORMAL)) {
 					x2 = (fromX + beat.getPosX() + beat.getSpacing(layout));
 					if( divisionType == null ) {
@@ -736,10 +736,10 @@ public class TGMeasureImpl extends TGMeasure{
 			this.paintDivisionType(layout, painter, divisionType, x1, x2, fromY, voiceIndex);
 		}
 	}
-	
+
 	public void paintDivisionType(TGLayout layout, UIPainter painter, TGDivisionType divisionType, float beatX1, float beatX2, float fromY, int voice) {
 		layout.setDivisionTypeStyle(painter);
-		
+
 		String label = Integer.toString(divisionType.getEnters());
 		float scale = layout.getScale();
 		float labelWidth = painter.getFMWidth(label);
@@ -751,24 +751,24 @@ public class TGMeasureImpl extends TGMeasure{
 		float x1 = (beatX1 - xMove);
 		float x2 = (beatX2 + (xMove * 2f));
 		float xCenter = (x1 + ((x2 - x1) / 2f));
-		
+
 		if( beatX2 > beatX1 ) {
 			painter.setLineWidth(layout.getLineWidth(1));
 			painter.initPath(UIPainter.PATH_DRAW);
 			painter.moveTo(x1, y1);
 			painter.lineTo(x1, y2);
 			painter.lineTo(xCenter - (labelWidth / 2f) - scale, y2);
-			
+
 			painter.moveTo(x2, y1);
 			painter.lineTo(x2, y2);
 			painter.lineTo(xCenter + (labelWidth / 2f) + scale, y2);
-			
+
 			painter.closePath();
 		}
-		
+
 		painter.drawString(label, (xCenter - (labelWidth / 2f)), (y2 + painter.getFMMiddleLine()));
 	}
-	
+
 	/**
 	 * Pinta las divisiones del compas
 	 */
@@ -803,21 +803,21 @@ public class TGMeasureImpl extends TGMeasure{
 			paintDivisions(layout, painter, x1, y1, x2, y2, offsetY, addInfo );
 		}
 	}
-	
+
 	private void paintDivisions(TGLayout layout,UIPainter painter,float x1, float y1, float x2, float y2, float offsetY, boolean addInfo) {
 		float scale = layout.getScale();
 		float lineWidthSmall = layout.getLineWidth(1);
 		float lineWidthBig = layout.getLineWidth(3);
-		
+
 		//numero de compas
-		if( addInfo ){ 
+		if( addInfo ){
 			String number = Integer.toString(this.getNumber());
 			layout.setMeasureNumberStyle(painter);
 			painter.drawString(number, getPosX() + scale, y1 + painter.getFMBaseLine() - (2f * scale));
 		}
-		
+
 		layout.setDivisionsStyle(painter, true);
-		
+
 		//principio
 		if( this.isRepeatOpen() || layout.isFirstMeasure(this) ){
 			painter.setLineWidth(layout.getLineWidth(0));
@@ -825,18 +825,18 @@ public class TGMeasureImpl extends TGMeasure{
 			painter.setAntialias(false);
 			painter.addRectangle(x1, y1, lineWidthBig, (y2 + offsetY) - y1);
 			painter.closePath();
-			
+
 			painter.setLineWidth(layout.getLineWidth(0));
 			painter.initPath(UIPainter.PATH_DRAW | UIPainter.PATH_FILL);
 			painter.setAntialias(false);
 			painter.addRectangle(x1 + lineWidthBig + (2f * scale), y1, lineWidthSmall, (y2 + offsetY) - y1);
 			painter.closePath();
-			
+
 			if( this.isRepeatOpen() ){
 				float size = layout.getLineWidth(4);
 				float xMove = (((lineWidthBig + scale + lineWidthSmall) + (2f * scale)) + size);
 				float yMove = size;
-				
+
 				painter.setLineWidth(lineWidthSmall);
 				painter.initPath(UIPainter.PATH_FILL);
 				painter.moveTo(x1 + xMove, y1 + ((y2 - y1) / 2f) - yMove);
@@ -853,7 +853,7 @@ public class TGMeasureImpl extends TGMeasure{
 			painter.lineTo(x1, (y2 + offsetY));
 			painter.closePath();
 		}
-		
+
 		//fin
 		if( this.getRepeatClose() > 0 || layout.isLastMeasure(this) ){
 			painter.setLineWidth(layout.getLineWidth(0));
@@ -861,18 +861,18 @@ public class TGMeasureImpl extends TGMeasure{
 			painter.setAntialias(false);
 			painter.addRectangle((x2 + getSpacing()) - (lineWidthBig + lineWidthSmall + (2f * scale)), y1, lineWidthSmall, (y2 - y1));
 			painter.closePath();
-			
+
 			painter.setLineWidth(layout.getLineWidth(0));
 			painter.initPath(UIPainter.PATH_DRAW | UIPainter.PATH_FILL);
 			painter.setAntialias(false);
 			painter.addRectangle((x2 + getSpacing()) - lineWidthBig, y1, lineWidthBig, (y2 - y1));
 			painter.closePath();
-			
+
 			if( this.getRepeatClose() > 0 ){
 				float size = layout.getLineWidth(4);
 				float xMove = (((lineWidthBig + scale + lineWidthSmall) + (2f * scale)) + size);
 				float yMove = size;
-				
+
 				painter.setLineWidth(lineWidthSmall);
 				painter.initPath(UIPainter.PATH_FILL);
 				painter.moveTo((x2 - xMove) + getSpacing(), y1 + ((y2 - y1) / 2f) - yMove);
@@ -882,7 +882,7 @@ public class TGMeasureImpl extends TGMeasure{
 				painter.closePath();
 				if( addInfo ){
 					layout.setDivisionsStyle(painter,false);
-					
+
 					String repetitions = ("x" + this.getRepeatClose());
 					painter.drawString(repetitions, x2 - painter.getFMWidth(repetitions) + getSpacing() - size, y1 + painter.getFMBaseLine() - (2f * scale));
 				}
@@ -895,10 +895,10 @@ public class TGMeasureImpl extends TGMeasure{
 			painter.lineTo((x2 + getSpacing()), y2);
 			painter.closePath();
 		}
-		
+
 		painter.setLineWidth(lineWidthSmall);
 	}
-	
+
 	/**
 	 * Pinta la Clave
 	 */
@@ -909,7 +909,7 @@ public class TGMeasureImpl extends TGMeasure{
 			float y = (fromY + getTs().getPosition(TGTrackSpacing.POSITION_SCORE_MIDDLE_LINES));
 			layout.setClefStyle(painter);
 			painter.initPath(UIPainter.PATH_FILL);
-			
+
 			if(layout.getSongManager().isPercussionChannel(this.getTrack().getSong(), this.getTrack().getChannelId())) {
 				TGClefPainter.paintNeutral(painter, x, y, layout.getScoreLineSpacing());
 			}
@@ -928,7 +928,7 @@ public class TGMeasureImpl extends TGMeasure{
 			painter.closePath();
 		}
 	}
-	
+
 	/**
 	 * Pinta la Armadura de Clave
 	 */
@@ -940,9 +940,9 @@ public class TGMeasureImpl extends TGMeasure{
 			int clefIndex = (this.getClef() - 1);
 			int currentKey = this.getKeySignature();
 			int previousKey = (this.previousMeasure != null ? this.previousMeasure.getKeySignature() : 0);
-			
+
 			layout.setKeySignatureStyle(painter);
-			
+
 			//natural
 			if(previousKey >= 1 && previousKey <= 7){
 				int naturalFrom =  (currentKey >= 1 && currentKey <= 7) ? currentKey : 0;
@@ -964,7 +964,7 @@ public class TGMeasureImpl extends TGMeasure{
 					x += (scale - (scale / 4));
 				}
 			}
-			
+
 			//sharps
 			if(currentKey >= 1 && currentKey <= 7){
 				for(int i = 0; i < currentKey; i ++ ){
@@ -987,7 +987,7 @@ public class TGMeasureImpl extends TGMeasure{
 			}
 		}
 	}
-	
+
 	private void paintTimeSignature(TGLayout layout,UIPainter painter, float fromX, float fromY){
 		if(this.getHeaderImpl().shouldPaintTimeSignature()){
 			int style = layout.getStyle();
@@ -1007,28 +1007,28 @@ public class TGMeasureImpl extends TGMeasure{
 				y2 = (y + getTrackImpl().getTabHeight());
 				height = ((layout.getStringSpacing() * 3f) / 2f);
 			}
-			
+
 			if((y2 - y1) < (height * 2f)) {
 				float yMove = ((((height * 2f) - (y2 - y1)) / 2f));
-				
+
 				y1 -= yMove;
 				y2 += yMove;
 			}
-			
+
 			float w1 = TGNumberPainter.getDigitsWidth(getTimeSignature().getNumerator(), height);
 			float w2 = TGNumberPainter.getDigitsWidth(getTimeSignature().getDenominator().getValue(), height);
 			float wMove1 = (w2 > w1 ? (w2 - w1) / 2f : 0f);
 			float wMove2 = (w1 > w2 ? (w1 - w2) / 2f : 0f);
-			
+
 			layout.setTimeSignatureStyle(painter);
 			TGNumberPainter.paintDigits(getTimeSignature().getNumerator(), painter, x + wMove1, fromY + y1, height);
 			TGNumberPainter.paintDigits(getTimeSignature().getDenominator().getValue(), painter, x + wMove2, fromY + y2 - height, height);
 		}
 	}
-	
+
 	private void paintTempo(TGLayout layout,UIPainter painter){
 		if(this.getHeaderImpl().shouldPaintTempo()){
-			float scale = 5f * layout.getScale(); 
+			float scale = 5f * layout.getScale();
 			float x = (getPosX() + getHeaderImpl().getLeftSpacing(layout));
 			float y = getPosY();
 			float lineSpacing = (Math.max(layout.getScoreLineSpacing() , layout.getStringSpacing()));
@@ -1038,13 +1038,13 @@ public class TGMeasureImpl extends TGMeasure{
 			}else if( (style & TGLayout.DISPLAY_TABLATURE) != 0 ){
 				y += ( getTs().getPosition(TGTrackSpacing.POSITION_TABLATURE) - (getTrack().stringCount() > 1 ? lineSpacing : (lineSpacing * 2f)));
 			}
-			
+
 			layout.setTempoStyle(painter, false);
 			float imgX = x;
 			float imgY = (y - (Math.round(scale * 3.5f ) + 2));
-			
+
 			TGTempoPainter.paintTempo(painter, imgX, imgY, scale);
-			
+
 			layout.setTempoStyle(painter, true);
 			String value = (" = " + getTempo().getValue());
 			float fontX = x + (Math.round( (1.33f * scale) ) + 1 );
@@ -1052,7 +1052,7 @@ public class TGMeasureImpl extends TGMeasure{
 			painter.drawString(value , fontX, fontY);
 		}
 	}
-	
+
 	private void paintTripletFeel(TGLayout layout,UIPainter painter){
 		if(this.getHeaderImpl().shouldPaintTripletFeel()){
 			float scale = (5f * layout.getScale());
@@ -1065,19 +1065,19 @@ public class TGMeasureImpl extends TGMeasure{
 			}else if( (style & TGLayout.DISPLAY_TABLATURE) != 0 ){
 				y += ( getTs().getPosition(TGTrackSpacing.POSITION_TABLATURE) - (getTrack().stringCount() > 1 ? lineSpacing : (lineSpacing * 2f)));
 			}
-			
+
 			layout.setTripletFeelStyle(painter, true);
 			String equal = (" = ");
 			float fontX = (x + (3.2f * scale));
 			float fontY = (y - (0.75f * scale) + painter.getFMBaseLine());
 			painter.drawString(equal, fontX , fontY);
-			
+
 			layout.setTripletFeelStyle(painter, false);
 			float x1 = x;
 			float x2 = x + ( (3.2f * scale) + painter.getFMWidth(equal));
 			float y1 = y - (( (1.0f * scale) + (2.5f * scale) ) + 2);
 			float y2 = y - (( (1.0f * scale) + (2.5f * scale) + (1.0f * scale)) + 2);
-			
+
 			if(getTripletFeel() == TGMeasureHeader.TRIPLET_FEEL_NONE && this.previousMeasure != null){
 				int previous = this.previousMeasure.getTripletFeel();
 				if(previous == TGMeasureHeader.TRIPLET_FEEL_EIGHTH){
@@ -1099,7 +1099,7 @@ public class TGMeasureImpl extends TGMeasure{
 			}
 		}
 	}
-	
+
 	private void paintLoopMarker(TGLayout layout,UIPainter painter){
 		if( layout.hasLoopMarker( this ) ){
 			int size = Math.round( layout.getLoopMarkerSpacing() - (1f * layout.getScale()));
@@ -1117,23 +1117,23 @@ public class TGMeasureImpl extends TGMeasure{
 			}
 		}
 	}
-	
+
 	private void paintLoopMarker(UIPainter painter, float x, float y, float size){
 		painter.initPath( UIPainter.PATH_FILL );
 		painter.addRectangle(x, y, size, size);
 		painter.closePath();
 	}
-	
+
 	private void paintMarker(TGLayout layout, UIPainter painter){
 		if( this.hasMarker() ){
 			float x = (getPosX() + getHeaderImpl().getLeftSpacing(layout) + getFirstNoteSpacing(layout));
 			float y = (getPosY() + getTs().getPosition(TGTrackSpacing.POSITION_MARKER));
-			
+
 			layout.setMarkerStyle(painter, getMarkerColor(layout.getResourceBuffer(), layout.getComponent().getResourceFactory()));
 			painter.drawString(getMarker().getTitle(), x, y);
 		}
 	}
-	
+
 	private void paintTexts(TGLayout layout,UIPainter painter){
 		Iterator<TGBeat> it = getBeats().iterator();
 		while(it.hasNext()){
@@ -1144,7 +1144,7 @@ public class TGMeasureImpl extends TGMeasure{
 			}
 		}
 	}
-	
+
 	public void paintPlayMode(TGLayout layout,UIPainter painter){
 		if(layout.isPlayModeEnabled() && isPlaying(layout)){
 			float scale = layout.getScale();
@@ -1174,14 +1174,14 @@ public class TGMeasureImpl extends TGMeasure{
 			//painter.setLineStyle(SWT.LINE_SOLID);
 		}
 	}
-	
+
 	/**
 	 * Retorna true si se esta reproduciendo y la posicion del player esta en este compas.
 	 */
 	public boolean isPlaying(TGLayout layout){
 		return layout.getComponent().isRunning(this);
 	}
-	
+
 	public float getBeatSpacing(TGLayout layout, TGBeatImpl beat){
 		float bMargin = getFirstNoteSpacing(layout);
 		float mPadding = (bMargin + getHeaderImpl().getLeftSpacing(layout) + getHeaderImpl().getRightSpacing(layout));
@@ -1191,28 +1191,28 @@ public class TGMeasureImpl extends TGMeasure{
 		if( mWidthWithSpacing < minimumDurationWidth ) {
 			mWidthWithSpacing = minimumDurationWidth;
 		}
-		
+
 		float beatX = (beat.getPosX() - bMargin);
 		float moveX = (mWidthWithSpacing * beatX / mWidth);
-		
+
 		return (moveX - beatX);
 	}
-	
+
 	public boolean hasTrack(int number){
 		return (getTrack().getNumber() == number);
 	}
-	
+
 	/**
 	 * Retorna el ancho del Compas
 	 */
 	public float getWidth(TGLayout layout) {
 		return ((layout.getStyle() & TGLayout.DISPLAY_MULTITRACK) != 0 ?this.getHeaderImpl().getMaxWidth():this.width);
 	}
-	
+
 	private float calculateClefSpacing(TGLayout layout) {
 		return (Math.round(DEFAULT_CLEF_WIDTH * layout.getScale()) + Math.round(layout.getClefSpacing()));
 	}
-	
+
 	private float calculateKeySignatureSpacing(TGLayout layout){
 		float spacing = 0;
 		if( this.paintKeySignature) {
@@ -1234,112 +1234,112 @@ public class TGMeasureImpl extends TGMeasure{
 		}
 		return spacing;
 	}
-	
+
 	public float getFirstNoteSpacing(TGLayout layout){
 		return getHeaderImpl().getFirstNoteSpacing(layout,this);
 	}
-	
+
 	public float getClefSpacing(TGLayout layout){
 		return getHeaderImpl().getClefSpacing(layout, this);
 	}
-	
+
 	public float getKeySignatureSpacing(TGLayout layout){
 		return getHeaderImpl().getKeySignatureSpacing(layout, this);
 	}
-	
+
 	public long getDivisionLength(){
 		return this.divisionLength;
 	}
-	
+
 	public boolean isBufferCreated() {
 		return this.bufferCreated;
 	}
-	
+
 	public void setBufferCreated(boolean bufferCreated) {
 		this.bufferCreated = bufferCreated;
 	}
-	
+
 	/**
 	 * Retorna la posicion X dentro del compas
 	 */
 	public float getPosX() {
 		return this.posX;
 	}
-	
+
 	/**
 	 * Asigna la posicion X dentro del compas
 	 */
 	public void setPosX(float posX) {
 		this.posX = posX;
 	}
-	
+
 	/**
 	 * Retorna la posicion Y dentro del compas
 	 */
 	public float getPosY() {
 		return this.posY;
 	}
-	
+
 	/**
 	 * Asigna la posicion Y dentro del compas
 	 */
 	public void setPosY(float posY) {
 		this.posY = posY;
 	}
-	
+
 	/**
 	 * Retorna el spacing de negras
 	 */
 	private float getQuarterSpacing(){
 		return this.quarterSpacing;
 	}
-	
+
 	/**
 	 * Retorna el spacing de negras
 	 */
 	private float getMaxQuarterSpacing(TGLayout layout){
 		return (((layout.getStyle() & TGLayout.DISPLAY_MULTITRACK) != 0)?getHeaderImpl().getMaxQuarterSpacing():this.quarterSpacing);
 	}
-	
+
 	public TGMeasureHeaderImpl getHeaderImpl(){
 		return (TGMeasureHeaderImpl)super.getHeader();
 	}
-	
+
 	public float getSpacing() {
 		return this.spacing;
 	}
-	
+
 	public void setSpacing(float spacing) {
 		if(spacing != this.spacing){
 			setBufferCreated(false);
 		}
 		this.spacing = spacing;
 	}
-	
+
 	public boolean isOutOfBounds() {
 		return this.outOfBounds;
 	}
-	
+
 	public void setOutOfBounds(boolean outOfBounds) {
 		this.outOfBounds = outOfBounds;
 	}
-	
+
 	public boolean isFirstOfLine() {
 		return this.firstOfLine;
 	}
-	
+
 	public void setFirstOfLine(boolean firstOfLine) {
 		this.firstOfLine = firstOfLine;
 	}
-	
+
 	public TGTrackImpl getTrackImpl(){
 		return (TGTrackImpl)super.getTrack();
 	}
-	
+
 	public TGTrackSpacing getTs() {
 		return this.ts;
 	}
-	
+
 	public void setTs(TGTrackSpacing ts) {
 		if(getTs() == null){
 			setBufferCreated(false);
@@ -1352,54 +1352,54 @@ public class TGMeasureImpl extends TGMeasure{
 		}
 		this.ts = ts;
 	}
-	
+
 	public float getMaxY() {
 		return this.maxY;
 	}
-	
+
 	public float getMinY() {
 		return this.minY;
 	}
-	
+
 	public int getNotEmptyBeats(){
 		return this.notEmptyBeats;
 	}
-	
+
 	public int getNotEmptyVoices(){
 		return this.notEmptyVoices;
 	}
-	
+
 	public int getLyricBeatIndex() {
 		return this.lyricBeatIndex;
 	}
-	
+
 	public void setLyricBeatIndex(int lyricBeatIndex) {
 		this.lyricBeatIndex = lyricBeatIndex;
 	}
-	
+
 	public boolean isPaintClef() {
 		return this.paintClef;
 	}
-	
+
 	public boolean isPaintKeySignature() {
 		return this.paintKeySignature;
 	}
-	
+
 	public TGMeasureBuffer getBuffer(){
 		if( this.buffer == null ){
 			this.buffer = new TGMeasureBuffer();
 		}
 		return this.buffer;
 	}
-	
+
 	public TGMeasureImpl getPreviousMeasure() {
 		return this.previousMeasure;
 	}
-	
+
 	public String getMarkerRegistryKey() {
 		return (TGMarker.class.getName() + "-" + this.getHeader().getNumber());
 	}
-	
+
 	public UIColor getMarkerColor(TGResourceBuffer buffer, UIResourceFactory factory){
 		String resourceKey = this.getMarkerRegistryKey();
 		TGMarker m = getMarker();
@@ -1411,7 +1411,7 @@ public class TGMeasureImpl extends TGMeasure{
 		}
 		if( markerColor == null || markerColor.isDisposed() ){
 			markerColor = factory.createColor(m.getColor().getR(), m.getColor().getG(), m.getColor().getB());
-			
+
 			buffer.setResource(resourceKey, markerColor);
 		}
 		return markerColor;

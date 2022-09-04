@@ -11,32 +11,32 @@ import com.trolltech.qt.gui.QContentsMargins;
 import com.trolltech.qt.gui.QWidget;
 
 public abstract class QTLayoutContainer<T extends QWidget> extends QTAbstractContainer<T> implements UILayoutContainer {
-	
+
 	private UILayout layout;
 	private UISize packedContentSize;
 	private QContentsMargins containerMargins;
 	private QContentsMargins containerChildMargins;
-	
+
 	public QTLayoutContainer(T control, QTContainer parent, boolean immediatelyShow) {
 		super(control, parent, immediatelyShow);
-		
+
 		this.packedContentSize = new UISize();
 		this.containerMargins = new QContentsMargins(0, 0, 0, 0);
 		this.containerChildMargins = new QContentsMargins(0, 0, 0, 0);
 	}
-	
+
 	public QTLayoutContainer(T control, QTContainer parent) {
 		this(control, parent, true);
 	}
-	
+
 	public QWidget getContainerControl() {
 		return this.getControl();
 	}
-	
+
 	public QSize getContainerSize() {
 		return this.getContainerControl().size();
 	}
-	
+
 	public UILayout getLayout() {
 		return layout;
 	}
@@ -44,7 +44,7 @@ public abstract class QTLayoutContainer<T extends QWidget> extends QTAbstractCon
 	public void setLayout(UILayout layout) {
 		this.layout = layout;
 	}
-	
+
 	public void setPackedContentSize(UISize packedContentSize) {
 		this.packedContentSize.setWidth(packedContentSize.getWidth());
 		this.packedContentSize.setHeight(packedContentSize.getHeight());
@@ -53,7 +53,7 @@ public abstract class QTLayoutContainer<T extends QWidget> extends QTAbstractCon
 	public UISize getPackedContentSize() {
 		return new UISize(this.packedContentSize.getWidth(), this.packedContentSize.getHeight());
 	}
-	
+
 	public QContentsMargins getContainerMargins() {
 		return this.getMargins(this.containerMargins);
 	}
@@ -61,11 +61,11 @@ public abstract class QTLayoutContainer<T extends QWidget> extends QTAbstractCon
 	public void setContainerMargins(QContentsMargins containerMargins) {
 		this.setMargins(this.containerMargins, containerMargins);
 	}
-	
+
 	public QContentsMargins getContainerChildMargins() {
 		return this.getMargins(this.containerChildMargins);
 	}
-	
+
 	public void setContainerChildMargins(QContentsMargins containerChildMargins) {
 		this.setMargins(this.containerChildMargins, containerChildMargins);
 	}
@@ -76,29 +76,29 @@ public abstract class QTLayoutContainer<T extends QWidget> extends QTAbstractCon
 		target.right = source.right;
 		target.bottom = source.bottom;
 	}
-	
+
 	public QContentsMargins getMargins(QContentsMargins source) {
 		return new QContentsMargins(source.left, source.top, source.right, source.bottom);
 	}
-	
+
 	public UIRectangle getChildArea(QSize size, QContentsMargins margins) {
 		return new UIRectangle(margins.left, margins.top, (size.width() - (margins.left + margins.right)), (size.height() - (margins.top + margins.bottom)));
 	}
-	
+
 	public UIRectangle getChildArea() {
 		return this.getChildArea(this.getContainerSize(), this.containerChildMargins);
 	}
-	
+
 	public void computeMargins() {
 		this.setContainerChildMargins(this.getContainerControl().getContentsMargins());
 	}
-	
+
 	public void computePackedSize(Float fixedWidth, Float fixedHeight) {
 		this.computeMargins();
-		
+
 		if( this.layout != null ) {
 			UISize packedContentSize = this.layout.computePackedSize(this);
-			
+
 			this.setPackedContentSize(packedContentSize);
 			this.computePackedSizeFor(packedContentSize);
 		} else {
@@ -106,7 +106,7 @@ public abstract class QTLayoutContainer<T extends QWidget> extends QTAbstractCon
 				uiControl.computePackedSize(null, null);
 			}
 		}
-		
+
 		UISize packedSize = this.getPackedSize();
 		if( fixedWidth != null && fixedWidth != packedSize.getWidth() ) {
 			packedSize.setWidth(fixedWidth);
@@ -116,23 +116,23 @@ public abstract class QTLayoutContainer<T extends QWidget> extends QTAbstractCon
 		}
 		this.setPackedSize(packedSize);
 	}
-	
+
 	public void computePackedSizeFor(UISize packedContentSize) {
 		int top = (this.containerMargins.top + this.containerChildMargins.top);
 		int left = (this.containerMargins.left + this.containerChildMargins.left);
 		int right = (this.containerMargins.right + this.containerChildMargins.right);
 		int bottom = (this.containerMargins.bottom + this.containerChildMargins.bottom);
-		
+
 		UISize packedSize = new UISize();
 		packedSize.setWidth((float) (left + right + packedContentSize.getWidth()));
 		packedSize.setHeight((float) (top + bottom + packedContentSize.getHeight()));
-		
+
 		this.setPackedSize(packedSize);
 	}
-	
+
 	public void setBounds(UIRectangle bounds) {
 		super.setBounds(bounds);
-		
+
 		if( this.layout != null ) {
 			this.layout.setBounds(this, this.getChildArea());
 		}

@@ -12,7 +12,7 @@ import org.herac.tuxguitar.ui.menu.UIMenuCheckableItem;
 import org.herac.tuxguitar.ui.menu.UIMenuSubMenuItem;
 
 public class DynamicMenuItem extends TGMenuItem {
-	
+
 	private UIMenuSubMenuItem dynamicMenuItem;
 	private UIMenuCheckableItem pianoPianissimo;
 	private UIMenuCheckableItem pianissimo;
@@ -22,44 +22,44 @@ public class DynamicMenuItem extends TGMenuItem {
 	private UIMenuCheckableItem forte;
 	private UIMenuCheckableItem fortissimo;
 	private UIMenuCheckableItem forteFortissimo;
-	
+
 	public DynamicMenuItem(UIMenuSubMenuItem dynamicMenuItem) {
 		this.dynamicMenuItem = dynamicMenuItem;
 	}
-	
+
 	public DynamicMenuItem(UIMenu parent) {
 		this(parent.createSubMenuItem());
 	}
-	
+
 	public void showItems(){
 		this.pianoPianissimo = this.dynamicMenuItem.getMenu().createCheckItem();
 		this.pianoPianissimo.addSelectionListener(this.createChangeVelocityAction(TGVelocities.PIANO_PIANISSIMO));
-		
+
 		this.pianissimo = this.dynamicMenuItem.getMenu().createCheckItem();
 		this.pianissimo.addSelectionListener(this.createChangeVelocityAction(TGVelocities.PIANISSIMO));
-		
+
 		this.piano = this.dynamicMenuItem.getMenu().createCheckItem();
 		this.piano.addSelectionListener(this.createChangeVelocityAction(TGVelocities.PIANO));
-		
+
 		this.mezzoPiano = this.dynamicMenuItem.getMenu().createCheckItem();
 		this.mezzoPiano.addSelectionListener(this.createChangeVelocityAction(TGVelocities.MEZZO_PIANO));
-		
+
 		this.mezzoForte = this.dynamicMenuItem.getMenu().createCheckItem();
 		this.mezzoForte.addSelectionListener(this.createChangeVelocityAction(TGVelocities.MEZZO_FORTE));
-		
+
 		this.forte = this.dynamicMenuItem.getMenu().createCheckItem();
 		this.forte.addSelectionListener(this.createChangeVelocityAction(TGVelocities.FORTE));
-		
+
 		this.fortissimo = this.dynamicMenuItem.getMenu().createCheckItem();
 		this.fortissimo.addSelectionListener(this.createChangeVelocityAction(TGVelocities.FORTISSIMO));
-		
+
 		this.forteFortissimo = this.dynamicMenuItem.getMenu().createCheckItem();
 		this.forteFortissimo.addSelectionListener(this.createChangeVelocityAction(TGVelocities.FORTE_FORTISSIMO));
-		
+
 		this.loadIcons();
 		this.loadProperties();
 	}
-	
+
 	public void update(){
 		TGNote note = TuxGuitar.getInstance().getTablatureEditor().getTablature().getCaret().getSelectedNote();
 		int velocity = ((note != null)?note.getVelocity():TuxGuitar.getInstance().getTablatureEditor().getTablature().getCaret().getVelocity());
@@ -81,7 +81,7 @@ public class DynamicMenuItem extends TGMenuItem {
 		this.forteFortissimo.setChecked(velocity == TGVelocities.FORTE_FORTISSIMO);
 		this.forteFortissimo.setEnabled(!running);
 	}
-	
+
 	public void loadProperties(){
 		this.dynamicMenuItem.setText(TuxGuitar.getProperty("dynamic"));
 		this.pianoPianissimo.setText(TuxGuitar.getProperty("dynamic.piano-pianissimo"));
@@ -93,11 +93,11 @@ public class DynamicMenuItem extends TGMenuItem {
 		this.fortissimo.setText(TuxGuitar.getProperty("dynamic.fortissimo"));
 		this.forteFortissimo.setText(TuxGuitar.getProperty("dynamic.forte-fortissimo"));
 	}
-	
+
 	public void loadIcons(){
 		//Nothing to do
 	}
-	
+
 	public TGActionProcessorListener createChangeVelocityAction(Integer velocity) {
 		TGActionProcessorListener tgActionProcessor = this.createActionProcessor(TGChangeVelocityAction.NAME);
 		tgActionProcessor.setAttribute(TGDocumentContextAttributes.ATTRIBUTE_VELOCITY, velocity);

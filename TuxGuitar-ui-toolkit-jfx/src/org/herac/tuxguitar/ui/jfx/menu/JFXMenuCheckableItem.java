@@ -5,7 +5,7 @@ import javafx.scene.control.CheckMenuItem;
 import org.herac.tuxguitar.ui.menu.UIMenuCheckableItem;
 
 public class JFXMenuCheckableItem extends JFXMenuActionItem implements UIMenuCheckableItem {
-	
+
 	public JFXMenuCheckableItem(JFXMenuItemContainer parent) {
 		super(new CheckMenuItem(), parent);
 	}

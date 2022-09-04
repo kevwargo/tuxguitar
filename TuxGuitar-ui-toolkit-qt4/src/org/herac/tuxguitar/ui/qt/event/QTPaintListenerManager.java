@@ -9,21 +9,21 @@ import com.trolltech.qt.core.QEvent;
 import com.trolltech.qt.gui.QPainter;
 
 public class QTPaintListenerManager extends UIPaintListenerManager implements QTEventHandler {
-	
+
 	private QTCanvas control;
-	
+
 	public QTPaintListenerManager(QTCanvas control) {
 		this.control = control;
 	}
-	
+
 	public boolean handle(QEvent event) {
 		QPainter qPainter = new QPainter(this.control.getPaintDeviceInterface());
 		QTPainter qtPainter = new QTPainter(qPainter);
-		
+
 		this.onPaint(new UIPaintEvent(this.control, qtPainter));
-		
+
 		qtPainter.dispose();
-		
+
 		return true;
 	}
 }

@@ -6,9 +6,9 @@ import org.herac.tuxguitar.util.plugin.TGPlugin;
 import org.herac.tuxguitar.util.plugin.TGPluginException;
 
 public class OpenDocPlugin implements TGPlugin {
-	
+
 	private OpenDocListener openDocListener;
-	
+
 	public void setEnabled(boolean enabled) throws TGPluginException {
 		try {
 			if( this.openDocListener != null ){
@@ -22,11 +22,11 @@ public class OpenDocPlugin implements TGPlugin {
 			throw new TGPluginException( throwable );
 		}
 	}
-	
+
 	public String getModuleId() {
 		return TGCocoaIntegrationPlugin.MODULE_ID;
 	}
-	
+
 	public void connect(TGContext context) throws TGPluginException {
 		this.setEnabled(true);
 	}

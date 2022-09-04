@@ -58,21 +58,21 @@ import org.herac.tuxguitar.util.singleton.TGSingletonFactory;
 import org.herac.tuxguitar.util.singleton.TGSingletonUtil;
 
 public class TGTransportDialog implements TGEventListener {
-	
+
 	private static final int PLAY_MODE_DELAY = 250;
-	
+
 	public static final int STATUS_STOPPED = 1;
 	public static final int STATUS_PAUSED = 2;
 	public static final int STATUS_RUNNING = 3;
-	
+
 	private static final String COLOR_BACKGROUND = "widget.transport.backgroundColor";
 	private static final String COLOR_FOREGROUND = "widget.transport.foregroundColor";
-	
+
 	private static final TGSkinnableColor[] SKINNABLE_COLORS = new TGSkinnableColor[] {
 		new TGSkinnableColor(COLOR_BACKGROUND, new UIColorModel(0x00, 0x00, 0x00)),
 		new TGSkinnableColor(COLOR_FOREGROUND, new UIColorModel(0x00, 0x00, 0x80)),
 	};
-	
+
 	private TGContext context;
 	private UIWindow dialog;
 	private UILabel label;
@@ -93,15 +93,15 @@ public class TGTransportDialog implements TGEventListener {
 	private boolean editingTickScale;
 	private long redrawTime;
 	private int status;
-	
+
 	public TGTransportDialog(TGContext context) {
 		this.context = context;
 		this.createSyncProcesses();
 	}
-	
+
 	public void show() {
 		UIFactory factory = this.getUIFactory();
-		
+
 		this.dialog = factory.createWindow(TGWindow.getInstance(this.context).getWindow(), false, false);
 		this.dialog.setImage(TuxGuitar.getInstance().getIconManager().getAppIcon());
 		this.dialog.setLayout(new UITableLayout());
@@ -109,7 +109,7 @@ public class TGTransportDialog implements TGEventListener {
 		this.initComposites();
 		this.initToolBar();
 		this.redrawProgress();
-		
+
 		this.addListeners();
 		this.dialog.addDisposeListener(new UIDisposeListener() {
 			public void onDispose(UIDisposeEvent event) {
@@ -119,32 +119,32 @@ public class TGTransportDialog implements TGEventListener {
 		});
 		TGDialogUtil.openDialog(this.dialog, TGDialogUtil.OPEN_STYLE_CENTER | TGDialogUtil.OPEN_STYLE_PACK);
 	}
-	
+
 	public void addListeners(){
 		TuxGuitar.getInstance().getSkinManager().addLoader(this);
 		TuxGuitar.getInstance().getLanguageManager().addLoader(this);
 		TuxGuitar.getInstance().getEditorManager().addRedrawListener(this);
 		TuxGuitar.getInstance().getEditorManager().addUpdateListener(this);
 	}
-	
+
 	public void removeListeners(){
 		TuxGuitar.getInstance().getSkinManager().removeLoader(this);
 		TuxGuitar.getInstance().getLanguageManager().removeLoader(this);
 		TuxGuitar.getInstance().getEditorManager().removeRedrawListener(this);
 		TuxGuitar.getInstance().getEditorManager().removeUpdateListener(this);
 	}
-	
+
 	private void initComposites(){
 		UIPanel composite = getUIFactory().createPanel(this.dialog, true);
 		composite.setLayout(new UITableLayout(0f));
-		
+
 		UITableLayout parentLayout = (UITableLayout) this.dialog.getLayout();
 		parentLayout.set(composite, 1, 1, UITableLayout.ALIGN_FILL, UITableLayout.ALIGN_FILL, true, true);
-		
+
 		this.initOptions(composite);
 		this.initProgress(composite);
 	}
-	
+
 	private void initOptions(UILayoutContainer parent) {
 		UIFactory factory = this.getUIFactory();
 		UITableLayout parentLayout = (UITableLayout) parent.getLayout();
@@ -152,51 +152,51 @@ public class TGTransportDialog implements TGEventListener {
 		UIPanel composite = factory.createPanel(parent, false);
 		composite.setLayout(compositeLayout);
 		parentLayout.set(composite, 1, 1, UITableLayout.ALIGN_FILL, UITableLayout.ALIGN_FILL, false, true, null, null, null, null, 0f);
-		
+
 		this.metronome = factory.createToggleButton(composite);
 		this.metronome.addSelectionListener(new TGActionProcessorListener(this.context , TGTransportMetronomeAction.NAME));
 		compositeLayout.set(this.metronome, 1, 1, UITableLayout.ALIGN_FILL, UITableLayout.ALIGN_FILL, false, true);
-		
+
 		this.mode = factory.createButton(composite);
 		this.mode.addSelectionListener(new TGActionProcessorListener(this.context , TGOpenTransportModeDialogAction.NAME));
 		compositeLayout.set(this.mode, 2, 1, UITableLayout.ALIGN_FILL, UITableLayout.ALIGN_FILL, false, true);
-		
+
 		this.loadOptionIcons();
 	}
-	
+
 	private void initProgress(UILayoutContainer parent){
 		UIPanel composite = getUIFactory().createPanel(parent, false);
 		composite.setLayout(new UITableLayout());
-		
+
 		UITableLayout parentLayout = (UITableLayout) parent.getLayout();
 		parentLayout.set(composite, 1, 2, UITableLayout.ALIGN_FILL, UITableLayout.ALIGN_FILL, true, true, null, null, null, null, 0f);
-		
+
 		initLabel(composite);
 		initScale(composite);
 	}
-	
+
 	private void initLabel(UILayoutContainer parent) {
 		final UIFactory factory = this.getUIFactory();
 		final UIFont font = factory.createFont("Minisystem", 24, false, false);
-		
+
 		TGColorManager tgColorManager = TGColorManager.getInstance(this.context);
 		tgColorManager.appendSkinnableColors(SKINNABLE_COLORS);
 		UIColor background = tgColorManager.getColor(COLOR_BACKGROUND);
 		UIColor foreground = tgColorManager.getColor(COLOR_FOREGROUND);
-		
+
 		UITableLayout parentLayout = (UITableLayout) parent.getLayout();
-		
+
 		UITableLayout labelContainerLayout = new UITableLayout();
 		UIPanel labelContainer = factory.createPanel(parent, false);
 		labelContainer.setLayout(labelContainerLayout);
 		labelContainer.setBgColor(background);
 		parentLayout.set(labelContainer, 1, 1, UITableLayout.ALIGN_FILL, UITableLayout.ALIGN_FILL, true, true);
-		
+
 		this.label = factory.createLabel(labelContainer);
 		this.label.setBgColor(background);
 		this.label.setFgColor(foreground);
 		this.label.setFont(font);
-		
+
 		labelContainer.addDisposeListener(new UIDisposeListener() {
 			public void onDispose(UIDisposeEvent event) {
 				font.dispose();
@@ -204,10 +204,10 @@ public class TGTransportDialog implements TGEventListener {
 		});
 		labelContainerLayout.set(this.label, 1, 1, UITableLayout.ALIGN_RIGHT, UITableLayout.ALIGN_FILL, true, true);
 	}
-	
+
 	private void initScale(UILayoutContainer parent){
 		UIFactory factory = this.getUIFactory();
-		
+
 		this.tickProgress = factory.createProgressBar(parent);
 		this.tickProgress.setCursor(UICursor.HAND);
 		this.tickProgress.setValue((int)TGDuration.QUARTER_TIME);
@@ -232,12 +232,12 @@ public class TGTransportDialog implements TGEventListener {
 				TGTransportDialog.this.updateProgressBar(event.getPosition().getX());
 			}
 		});
-		
+
 		UITableLayout parentLayout = (UITableLayout) parent.getLayout();
 		parentLayout.set(this.tickProgress, 2, 1, UITableLayout.ALIGN_FILL, UITableLayout.ALIGN_CENTER, true, false);
 		parentLayout.set(this.tickProgress, UITableLayout.PACKED_HEIGHT, 10f);
 	}
-	
+
 	private void updateProgressBar(float x){
 		if( this.isEditingTickScale()){
 			float width = this.tickProgress.getBounds().getWidth();
@@ -246,54 +246,54 @@ public class TGTransportDialog implements TGEventListener {
 			this.redrawProgress();
 		}
 	}
-	
+
 	private void initToolBar(){
 		if( this.toolBar != null && !this.toolBar.isDisposed() ){
 			this.toolBar.dispose();
 		}
 		this.toolBar = getUIFactory().createHorizontalToolBar(this.dialog);
-		
+
 		this.first = this.toolBar.createActionItem();
 		this.first.addSelectionListener(new TGActionProcessorListener(this.context, TGGoFirstMeasureAction.NAME));
-		
+
 		this.previous = this.toolBar.createActionItem();
 		this.previous.addSelectionListener(new TGActionProcessorListener(this.context, TGGoPreviousMeasureAction.NAME));
-		
+
 		this.stop = this.toolBar.createActionItem();
 		this.stop.addSelectionListener(new TGActionProcessorListener(this.context, TGTransportStopAction.NAME));
-		
+
 		this.play = this.toolBar.createActionItem();
 		this.play.addSelectionListener(new TGActionProcessorListener(this.context, TGTransportPlayAction.NAME));
-		
+
 		this.next = this.toolBar.createActionItem();
 		this.next.addSelectionListener(new TGActionProcessorListener(this.context, TGGoNextMeasureAction.NAME));
-		
+
 		this.last = this.toolBar.createActionItem();
 		this.last.addSelectionListener(new TGActionProcessorListener(this.context, TGGoLastMeasureAction.NAME));
-		
+
 		UITableLayout uiLayout = (UITableLayout) this.dialog.getLayout();
 		uiLayout.set(this.toolBar, 2, 1, UITableLayout.ALIGN_FILL, UITableLayout.ALIGN_FILL, true, true);
-		
+
 		this.updateItems(true);
 		this.loadProperties();
 	}
-	
+
 	public int getStatus() {
 		return this.status;
 	}
-	
+
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	
+
 	public void updateItems(){
 		this.updateItems(false);
 	}
-	
+
 	public void updateItems(boolean force){
 		if(!isDisposed()){
 			int lastStatus = getStatus();
-			
+
 			MidiPlayer player = MidiPlayer.getInstance(this.context);
 			if( player.isRunning()){
 				setStatus(STATUS_RUNNING);
@@ -302,7 +302,7 @@ public class TGTransportDialog implements TGEventListener {
 			}else{
 				setStatus(STATUS_STOPPED);
 			}
-			
+
 			if( force || lastStatus != getStatus()){
 				if(getStatus() == STATUS_RUNNING){
 					this.first.setImage(TuxGuitar.getInstance().getIconManager().getTransportFirst2());
@@ -333,11 +333,11 @@ public class TGTransportDialog implements TGEventListener {
 			this.tickProgress.setMinimum((int)first.getStart());
 			this.tickProgress.setMaximum((int)(last.getStart() + last.getLength()) -1);
 			this.metronome.setSelected(player.isMetronomeEnabled());
-			
+
 			this.redrawProgress();
 		}
 	}
-	
+
 	public void loadProperties(){
 		if(!isDisposed()){
 			this.dialog.setText(TuxGuitar.getProperty("transport"));
@@ -351,12 +351,12 @@ public class TGTransportDialog implements TGEventListener {
 			this.loadPlayText();
 		}
 	}
-	
+
 	public void loadPlayText(){
 		String property = TuxGuitar.getProperty( (getStatus() == STATUS_RUNNING ? "transport.pause" : "transport.start") );
 		this.play.setToolTipText(property);
 	}
-	
+
 	public void loadIcons(){
 		if(!isDisposed()){
 			this.initToolBar();
@@ -365,57 +365,57 @@ public class TGTransportDialog implements TGEventListener {
 			this.dialog.layout();
 		}
 	}
-	
+
 	private void loadOptionIcons(){
 		this.metronome.setImage(TuxGuitar.getInstance().getIconManager().getTransportMetronome());
 		this.mode.setImage(TuxGuitar.getInstance().getIconManager().getTransportMode());
 	}
-	
+
 	public void dispose() {
 		if(!isDisposed()){
 			this.dialog.dispose();
 		}
 	}
-	
+
 	public boolean isDisposed() {
 		return (this.dialog == null || this.dialog.isDisposed());
 	}
-	
+
 	public boolean isEditingTickScale() {
 		return this.editingTickScale;
 	}
-	
+
 	public void setEditingTickScale(boolean editingTickScale) {
 		this.editingTickScale = editingTickScale;
 	}
-	
+
 	public UIFactory getUIFactory() {
 		return TGApplication.getInstance(this.context).getFactory();
 	}
-	
+
 	public TGDocumentManager getDocumentManager(){
 		return TGDocumentManager.getInstance(this.context);
 	}
-	
+
 	public TGSongManager getSongManager(){
 		return getDocumentManager().getSongManager();
 	}
-	
+
 	public void gotoMeasure(TGMeasureHeader header, boolean moveCaret){
 		TGTransport.getInstance(this.context).gotoMeasure(header, moveCaret);
 	}
-	
+
 	public void updateTickLabel(String value) {
 		String oldValue = this.label.getText();
-		
+
 		this.label.setText(value);
-		
+
 		if( oldValue == null || oldValue.length() != value.length() ) {
 			UIPanel uiPanel = (UIPanel) this.label.getParent();
 			uiPanel.layout();
 		}
 	}
-	
+
 	public void redrawProgress(){
 		if(!isDisposed() && !TuxGuitar.getInstance().isLocked()){
 			if( isEditingTickScale() ){
@@ -423,19 +423,19 @@ public class TGTransportDialog implements TGEventListener {
 			}
 			else if(!MidiPlayer.getInstance(this.context).isRunning()){
 				long tickPosition = TablatureEditor.getInstance(this.context).getTablature().getCaret().getPosition();
-				
+
 				TGTransportDialog.this.updateTickLabel(Long.toString(tickPosition));
 				TGTransportDialog.this.tickProgress.setValue((int)tickPosition);
 			}
 		}
 	}
-	
+
 	public void redrawPlayingMode(){
 		if(!isDisposed()){
 			MidiPlayer player = MidiPlayer.getInstance(this.context);
 			if(!isEditingTickScale() && player.isRunning()){
 				TGTransportCache transportCache = TGTransport.getInstance(this.context).getCache();
-				
+
 				long time = System.currentTimeMillis();
 				if( time > this.redrawTime + PLAY_MODE_DELAY ){
 					long position = (transportCache.getPlayStart() + (player.getTickPosition() - transportCache.getPlayTick()));
@@ -446,47 +446,47 @@ public class TGTransportDialog implements TGEventListener {
 			}
 		}
 	}
-	
+
 	public void createSyncProcesses() {
 		this.loadPropertiesProcess = new TGSyncProcess(this.context, new Runnable() {
 			public void run() {
 				loadProperties();
 			}
 		});
-		
+
 		this.loadIconsProcess = new TGSyncProcessLocked(this.context, new Runnable() {
 			public void run() {
 				loadIcons();
 			}
 		});
-		
+
 		this.updateItemsProcess = new TGSyncProcessLocked(this.context, new Runnable() {
 			public void run() {
 				updateItems();
 			}
 		});
-		
+
 		this.redrawPlayModeProcess = new TGSyncProcessLocked(this.context, new Runnable() {
 			public void run() {
 				redrawPlayingMode();
 			}
 		});
 	}
-	
+
 	public void processRedrawEvent(TGEvent event) {
 		int type = ((Integer)event.getAttribute(TGRedrawEvent.PROPERTY_REDRAW_MODE)).intValue();
 		if( type == TGRedrawEvent.PLAYING_THREAD || type == TGRedrawEvent.PLAYING_NEW_BEAT ){
 			this.redrawPlayModeProcess.process();
 		}
 	}
-	
+
 	public void processUpdateEvent(TGEvent event) {
 		int type = ((Integer)event.getAttribute(TGUpdateEvent.PROPERTY_UPDATE_MODE)).intValue();
 		if( type == TGUpdateEvent.SELECTION ){
 			this.updateItemsProcess.process();
 		}
 	}
-	
+
 	public void processEvent(final TGEvent event) {
 		if( TGSkinEvent.EVENT_TYPE.equals(event.getEventType()) ) {
 			this.loadIconsProcess.process();
@@ -501,7 +501,7 @@ public class TGTransportDialog implements TGEventListener {
 			this.processUpdateEvent(event);
 		}
 	}
-	
+
 	public static TGTransportDialog getInstance(TGContext context) {
 		return TGSingletonUtil.getInstance(context, TGTransportDialog.class.getName(), new TGSingletonFactory<TGTransportDialog>() {
 			public TGTransportDialog createInstance(TGContext context) {

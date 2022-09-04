@@ -40,30 +40,30 @@ import org.herac.tuxguitar.song.models.effects.TGEffectTremoloPicking;
 import org.herac.tuxguitar.song.models.effects.TGEffectTrill;
 
 public class GPXDocumentParser {
-	
+
 	private static final float GP_BEND_POSITION = 100f;
 	private static final float GP_BEND_SEMITONE =  25f;
 	private static final float GP_WHAMMY_BAR_POSITION = 100f;
 	private static final float GP_WHAMMY_BAR_SEMITONE =  50f;
-	
+
 	private TGFactory factory;
 	private GPXDocument document;
-	
+
 	public GPXDocumentParser(TGFactory factory, GPXDocument document){
 		this.factory = factory;
 		this.document = document;
 	}
-	
+
 	public TGSong parse(){
 		TGSong tgSong =  this.factory.newSong();
-		
+
 		this.parseScore(tgSong);
 		this.parseTracks(tgSong);
 		this.parseMasterBars(tgSong);
-		
+
 		return tgSong;
 	}
-	
+
 	private void parseScore(TGSong tgSong){
 		tgSong.setName(this.document.getScore().getTitle());
 		tgSong.setArtist(this.document.getScore().getArtist());
@@ -73,26 +73,26 @@ public class GPXDocumentParser {
 		tgSong.setWriter(this.document.getScore().getTabber());
 		tgSong.setComments(this.document.getScore().getNotices());
 	}
-	
+
 	private void parseTracks(TGSong tgSong){
 		TGSongManager tgSongManager = new TGSongManager(this.factory);
-		
+
 		List<GPXTrack> tracks = this.document.getTracks();
 		for( int i = 0 ; i < tracks.size(); i ++ ){
 			GPXTrack gpTrack = (GPXTrack) this.document.getTracks().get(i);
-			
+
 			TGChannel tgChannel = this.factory.newChannel();
 			tgChannel.setBank( gpTrack.getGmChannel1() == 9 ? TGChannel.DEFAULT_PERCUSSION_BANK : TGChannel.DEFAULT_BANK);
 			tgChannel.setProgram( tgChannel.isPercussionChannel() ? (short) 0 : (short) gpTrack.getGmProgram());
-			
+
 			TGChannelParameter gmChannel1Param = this.factory.newChannelParameter();
 			gmChannel1Param.setKey(GMChannelRoute.PARAMETER_GM_CHANNEL_1);
 			gmChannel1Param.setValue(Integer.toString(gpTrack.getGmChannel1()));
-			
+
 			TGChannelParameter gmChannel2Param = this.factory.newChannelParameter();
 			gmChannel2Param.setKey(GMChannelRoute.PARAMETER_GM_CHANNEL_2);
 			gmChannel2Param.setValue(Integer.toString(gpTrack.getGmChannel1() != 9 ? gpTrack.getGmChannel2() : gpTrack.getGmChannel1()));
-			
+
 			for( int c = 0 ; c < tgSong.countChannels() ; c ++ ){
 				TGChannel tgChannelAux = tgSong.getChannel(c);
 				for( int n = 0 ; n < tgChannelAux.countParameters() ; n ++ ){
@@ -111,12 +111,12 @@ public class GPXDocumentParser {
 				tgChannel.addParameter(gmChannel2Param);
 				tgSong.addChannel(tgChannel);
 			}
-			
+
 			TGTrack tgTrack = this.factory.newTrack();
 			tgTrack.setNumber( i + 1 );
 			tgTrack.setName(gpTrack.getName());
 			tgTrack.setChannelId(tgChannel.getChannelId());
-			
+
 			if( gpTrack.getTunningPitches() != null ){
 				for( int s = 1; s <= gpTrack.getTunningPitches().length ; s ++ ){
 					TGString tgString = this.factory.newString();
@@ -144,15 +144,15 @@ public class GPXDocumentParser {
 			tgSong.addTrack(tgTrack);
 		}
 	}
-	
+
 	private void parseMasterBars(TGSong tgSong){
 		long tgStart = TGDuration.QUARTER_TIME;
-		
+
 		List<GPXMasterBar> masterBars = this.document.getMasterBars();
 		for( int i = 0 ; i < masterBars.size() ; i ++ ){
 			GPXMasterBar mbar = (GPXMasterBar) masterBars.get(i);
 			GPXAutomation gpTempoAutomation = this.document.getAutomation("Tempo", i);
-			
+
 			TGMeasureHeader tgMeasureHeader = this.factory.newHeader();
 			tgMeasureHeader.setStart(tgStart);
 			tgMeasureHeader.setNumber( i + 1 );
@@ -177,11 +177,11 @@ public class GPXDocumentParser {
 				tgMeasureHeader.getTempo().setValue( tgTempo );
 			}
 			tgSong.addMeasureHeader(tgMeasureHeader);
-			
+
 			for( int t = 0 ; t < tgSong.countTracks() ; t ++ ){
 				TGTrack tgTrack = tgSong.getTrack(t);
 				TGMeasure tgMeasure = this.factory.newMeasure(tgMeasureHeader);
-				
+
 				int accidental = mbar.getAccidentalCount();
 				if( accidental < 0 ){
 					accidental = 7 - accidental; // translate -1 to 8, etc.
@@ -189,9 +189,9 @@ public class GPXDocumentParser {
 				if( accidental >= 0 && accidental <= 14 ){
 					tgMeasure.setKeySignature(accidental);
 				}
-				
+
 				tgTrack.addMeasure(tgMeasure);
-				
+
 				int gpMasterBarIndex = i;
 				GPXBar gpBar = ( t < mbar.getBarIds().length ? this.document.getBar( mbar.getBarIds()[t] ) : null );
 				while( gpBar != null && gpBar.getSimileMark() != null ){
@@ -208,16 +208,16 @@ public class GPXDocumentParser {
 						gpBar = null;
 					}
 				}
-				
+
 				if( gpBar != null ){
 					this.parseBar( gpBar , tgMeasure );
 				}
 			}
-			
+
 			tgStart += tgMeasureHeader.getLength();
 		}
 	}
-	
+
 	private void parseBar(GPXBar bar , TGMeasure tgMeasure){
 		if (bar.getClef() != null) {
 			String clef = bar.getClef();
@@ -229,7 +229,7 @@ public class GPXDocumentParser {
 				tgMeasure.setClef(TGMeasure.CLEF_TENOR);
 			}
 		}
-		
+
 		int[] voiceIds = bar.getVoiceIds();
 		for( int v = 0; v < TGBeat.MAX_VOICES; v ++ ){
 			if( voiceIds.length > v ){
@@ -240,7 +240,7 @@ public class GPXDocumentParser {
 						for( int b = 0 ; b < voice.getBeatIds().length ; b ++){
 							GPXBeat beat = this.document.getBeat( voice.getBeatIds()[b] );
 							GPXRhythm gpRhythm = this.document.getRhythm( beat.getRhythmId() );
-							
+
 							TGBeat tgBeat = getBeat(tgMeasure, tgStart);
 							TGVoice tgVoice = tgBeat.getVoice( v % tgBeat.countVoices() );
 							tgVoice.setEmpty(false);
@@ -271,11 +271,11 @@ public class GPXDocumentParser {
 									tgBeat.setChord(chord);
 								}
 							}
-							
+
 							this.parseRhythm(gpRhythm, tgVoice.getDuration());
 							if( beat.getNoteIds() != null ){
 								int tgVelocity = this.parseDynamic(beat);
-								
+
 								for( int n = 0 ; n < beat.getNoteIds().length; n ++ ){
 									GPXNote gpNote = this.document.getNote( beat.getNoteIds()[n] );
 									if( gpNote != null ){
@@ -283,23 +283,23 @@ public class GPXDocumentParser {
 									}
 								}
 							}
-							
+
 							tgStart += tgVoice.getDuration().getTime();
 						}
 					}
 				}
 			}
 		}
-		
+
 		if( tgMeasure.getNumber() == 1 ){
 			this.fixFirstMeasureStartPositions(tgMeasure);
 		}
 	}
-	
+
 	private void parseNote(GPXNote gpNote, TGVoice tgVoice, int tgVelocity, GPXBeat gpBeat){
 		int tgValue = -1;
 		int tgString = -1;
-		
+
 		if( gpNote.getString() >= 0 && gpNote.getFret() >= 0 ){
 			tgValue = gpNote.getFret();
 			tgString = (tgVoice.getBeat().getMeasure().getTrack().stringCount() - gpNote.getString());
@@ -316,7 +316,7 @@ public class GPXDocumentParser {
 					}
 				}
 			}
-			
+
 			if( gmValue >= 0 ){
 				TGString tgStringAlternative = getStringFor(tgVoice.getBeat(), gmValue );
 				if( tgStringAlternative != null ){
@@ -325,7 +325,7 @@ public class GPXDocumentParser {
 				}
 			}
 		}
-		
+
 		if( tgValue >= 0 && tgString > 0 ){
 			TGNote tgNote = this.factory.newNote();
 			tgNote.setValue(tgValue);
@@ -350,11 +350,11 @@ public class GPXDocumentParser {
 			tgNote.getEffect().setHarmonic(parseHarmonic( gpNote ) );
 			tgNote.getEffect().setBend(parseBend( gpNote ) );
 			tgNote.getEffect().setTremoloBar(parseTremoloBar( gpBeat ));
-			
+
 			tgVoice.addNote( tgNote );
 		}
 	}
-	
+
 	private TGEffectTrill parseTrill(GPXNote gpNote){
 		TGEffectTrill tr = null;
 		if( gpNote.getTrill() > 0 ){
@@ -366,7 +366,7 @@ public class GPXDocumentParser {
 		}
 		return tr;
 	}
-	
+
 	private TGEffectTremoloPicking parseTremoloPicking(GPXBeat gpBeat, GPXNote gpNote){
 		TGEffectTremoloPicking tp = null;
 		if (gpBeat.getTremolo() != null && gpBeat.getTremolo().length == 2) {
@@ -375,12 +375,12 @@ public class GPXDocumentParser {
 		}
 		return tp;
 	}
-	
+
 	private TGEffectHarmonic parseHarmonic(GPXNote note){
 		TGEffectHarmonic harmonic = null;
 		if( note.getHarmonicType() != null && note.getHarmonicType().length() > 0 ){
 			harmonic = this.factory.newEffectHarmonic();
-			
+
 			String type = note.getHarmonicType();
 			if (type.equals("Artificial")){
 				harmonic.setType(TGEffectHarmonic.TYPE_ARTIFICIAL);
@@ -392,12 +392,12 @@ public class GPXDocumentParser {
 				// Default type.
 				harmonic.setType(TGEffectHarmonic.TYPE_NATURAL);
 			}
-			
+
 			int hFret = note.getHarmonicFret();
-			
+
 			// midi export does this, but not for natural harmonics
 			// key = (orig + TGEffectHarmonic.NATURAL_FREQUENCIES[note.getEffect().getHarmonic().getData()][1]);
-			
+
 			if (hFret >= 0){
 				for(int i = 0;i < TGEffectHarmonic.NATURAL_FREQUENCIES.length;i ++){
 					if(hFret == (TGEffectHarmonic.NATURAL_FREQUENCIES[i][0] ) ){
@@ -409,15 +409,15 @@ public class GPXDocumentParser {
 		}
 		return harmonic;
 	}
-	
+
 	private TGEffectBend parseBend(GPXNote note){
 		TGEffectBend bend = null;
 		if( note.isBendEnabled() && note.getBendOriginValue() != null && note.getBendDestinationValue() != null ){
 			bend = this.factory.newEffectBend();
-			
+
 			// Add the first point
 			bend.addPoint(0, parseBendValue(note.getBendOriginValue()));
-			
+
 			if( note.getBendOriginOffset() != null ){
 				bend.addPoint(parseBendPosition(note.getBendOriginOffset()), parseBendValue(note.getBendOriginValue()));
 			}
@@ -435,29 +435,29 @@ public class GPXDocumentParser {
 			if( note.getBendDestinationOffset() != null && note.getBendDestinationOffset().intValue() < GP_BEND_POSITION ){
 				bend.addPoint(parseBendPosition(note.getBendDestinationOffset()), parseBendValue(note.getBendDestinationValue()));
 			}
-			
+
 			// Add last point
 			bend.addPoint(TGEffectBend.MAX_POSITION_LENGTH, parseBendValue(note.getBendDestinationValue()));
 		}
 		return bend;
 	}
-	
+
 	private int parseBendValue( Integer gpValue ){
 		return Math.round(gpValue.intValue() * (TGEffectBend.SEMITONE_LENGTH / GP_BEND_SEMITONE));
 	}
-	
+
 	private int parseBendPosition( Integer gpOffset ){
 		return Math.round(gpOffset.intValue() * (TGEffectBend.MAX_POSITION_LENGTH / GP_BEND_POSITION));
 	}
-	
+
 	private TGEffectTremoloBar parseTremoloBar(GPXBeat beat){
 		TGEffectTremoloBar tremoloBar = null;
 		if( beat.isWhammyBarEnabled() && beat.getWhammyBarOriginValue() != null && beat.getWhammyBarDestinationValue() != null){
 			tremoloBar = this.factory.newEffectTremoloBar();
-			
+
 			// Add the first point
 			tremoloBar.addPoint(0, parseTremoloBarValue(beat.getWhammyBarOriginValue()));
-			
+
 			if( beat.getWhammyBarOriginOffset() != null ){
 				tremoloBar.addPoint(parseTremoloBarPosition(beat.getWhammyBarOriginOffset()), parseTremoloBarValue(beat.getWhammyBarOriginValue()));
 			}
@@ -474,7 +474,7 @@ public class GPXDocumentParser {
 					if( beat.getWhammyBarOriginOffset() == null || offset1.intValue() >= beat.getWhammyBarOriginOffset().intValue() ){
 						tremoloBar.addPoint(parseTremoloBarPosition(offset1), parseTremoloBarValue(beat.getWhammyBarMiddleValue()));
 					}
-					
+
 					Integer offset2 = (beat.getWhammyBarMiddleOffset2() != null ? beat.getWhammyBarMiddleOffset2() : defaultMiddleOffset);
 					if( beat.getWhammyBarOriginOffset() == null || offset1.intValue() >= beat.getWhammyBarOriginOffset().intValue() && offset2.intValue() > offset1.intValue() ){
 						tremoloBar.addPoint(parseTremoloBarPosition(offset2), parseTremoloBarValue(beat.getWhammyBarMiddleValue()));
@@ -484,13 +484,13 @@ public class GPXDocumentParser {
 			if( beat.getWhammyBarDestinationOffset() != null && beat.getWhammyBarDestinationOffset().intValue() < GP_WHAMMY_BAR_POSITION ){
 				tremoloBar.addPoint(parseTremoloBarPosition(beat.getWhammyBarDestinationOffset()), parseTremoloBarValue(beat.getWhammyBarDestinationValue()));
 			}
-			
+
 			// Add last point
 			tremoloBar.addPoint(TGEffectTremoloBar.MAX_POSITION_LENGTH, parseTremoloBarValue(beat.getWhammyBarDestinationValue()));
 		}
 		return tremoloBar;
 	}
-	
+
 	private int parseTremoloBarValue( Integer gpValue ){
 		int value = Math.round(gpValue.intValue() * (1f / GP_WHAMMY_BAR_SEMITONE));
 		if( value > TGEffectTremoloBar.MAX_VALUE_LENGTH ){
@@ -501,11 +501,11 @@ public class GPXDocumentParser {
 		}
 		return value;
 	}
-	
+
 	private int parseTremoloBarPosition( Integer gpOffset ){
 		return Math.round(gpOffset.intValue() * (TGEffectTremoloBar.MAX_POSITION_LENGTH / GP_WHAMMY_BAR_POSITION));
 	}
-	
+
 	private boolean parseFadeIn(GPXBeat beat){
 		if( beat.getFadding() != null ){
 			if( beat.getFadding().equals("FadeIn")) {
@@ -514,7 +514,7 @@ public class GPXDocumentParser {
 		}
 		return false;
 	}
-	
+
 	private void parseRhythm(GPXRhythm gpRhythm , TGDuration tgDuration){
 		tgDuration.setDotted(gpRhythm.getAugmentationDotCount() == 1);
 		tgDuration.setDoubleDotted(gpRhythm.getAugmentationDotCount() == 2);
@@ -536,10 +536,10 @@ public class GPXDocumentParser {
 			tgDuration.setValue(TGDuration.SIXTY_FOURTH);
 		}
 	}
-	
+
 	private int parseStroke(GPXBeat beat){
 		int tgStroke = TGStroke.STROKE_NONE;
-		String stroke = beat.getBrush(); 
+		String stroke = beat.getBrush();
 		if ( stroke.equals("Down")){
 			tgStroke = TGStroke.STROKE_DOWN;
 		}else if ( stroke.equals("Up")){
@@ -547,7 +547,7 @@ public class GPXDocumentParser {
 		}
 		return tgStroke;
 	}
-	
+
 	private int parseDynamic(GPXBeat beat){
 		int tgVelocity = TGVelocities.DEFAULT;
 		if( beat.getDynamic() != null ){
@@ -571,11 +571,11 @@ public class GPXDocumentParser {
 		}
 		return tgVelocity;
 	}
-	
+
 	private int parseTripletFeel(GPXMasterBar gpMasterBar){
 		if( gpMasterBar.getTripletFeel() != null ){
 			if( gpMasterBar.getTripletFeel().equals("Triplet8th") ){
-				return TGMeasureHeader.TRIPLET_FEEL_EIGHTH; 
+				return TGMeasureHeader.TRIPLET_FEEL_EIGHTH;
 			}
 			if( gpMasterBar.getTripletFeel().equals("Triplet16th") ){
 				return TGMeasureHeader.TRIPLET_FEEL_SIXTEENTH;
@@ -583,7 +583,7 @@ public class GPXDocumentParser {
 		}
 		return TGMeasureHeader.TRIPLET_FEEL_NONE;
 	}
-	
+
 	private TGBeat getBeat(TGMeasure measure, long start){
 		int count = measure.countBeats();
 		for(int i = 0 ; i < count ; i ++ ){
@@ -597,14 +597,14 @@ public class GPXDocumentParser {
 		measure.addBeat(beat);
 		return beat;
 	}
-	
+
 	private TGString getStringFor(TGBeat tgBeat, int value ){
 		List<TGString> strings = tgBeat.getMeasure().getTrack().getStrings();
 		for(int i = 0;i < strings.size();i ++){
 			TGString string = (TGString)strings.get(i);
 			if(value >= string.getValue()){
 				boolean emptyString = true;
-				
+
 				for(int v = 0; v < tgBeat.countVoices(); v ++){
 					TGVoice voice = tgBeat.getVoice( v );
 					Iterator<TGNote> it = voice.getNotes().iterator();
@@ -623,7 +623,7 @@ public class GPXDocumentParser {
 		}
 		return null;
 	}
-	
+
 	private void fixFirstMeasureStartPositions(TGMeasure tgMeasure){
 		if( tgMeasure.getNumber() == 1 ){
 			long measureEnd = (tgMeasure.getStart() + tgMeasure.getLength());

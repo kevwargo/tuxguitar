@@ -8,9 +8,9 @@ import java.util.Properties;
 import org.herac.tuxguitar.util.properties.TGProperties;
 
 public class TGPropertiesImpl implements TGProperties{
-	
+
 	private Properties properties;
-	
+
 	public TGPropertiesImpl(){
 		this.properties = new Properties();
 	}
@@ -22,19 +22,19 @@ public class TGPropertiesImpl implements TGProperties{
 	public void setValue(String key, String value) {
 		this.properties.setProperty(key, value);
 	}
-	
+
 	public void remove(String key) {
 		this.properties.remove(key);
 	}
-	
+
 	public void clear() {
 		this.properties.clear();
 	}
-	
+
 	public void load(InputStream inputStream) throws IOException {
 		this.properties.load(inputStream);
 	}
-	
+
 	public void store(OutputStream outputStream, String comments) throws IOException{
 		this.properties.store(outputStream, comments);
 	}

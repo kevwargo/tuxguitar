@@ -10,21 +10,21 @@ import org.herac.tuxguitar.song.models.effects.TGEffectHarmonic;
 import org.herac.tuxguitar.util.TGContext;
 
 public class TGChangeHarmonicNoteAction extends TGActionBase {
-	
+
 	public static final String NAME = "action.note.effect.change-harmonic";
-	
+
 	public static final String ATTRIBUTE_EFFECT = TGEffectHarmonic.class.getName();
-	
+
 	public TGChangeHarmonicNoteAction(TGContext context) {
 		super(context, NAME);
 	}
-	
+
 	protected void processAction(TGActionContext context){
 		TGMeasure measure = ((TGMeasure) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_MEASURE));
 		TGBeat beat = ((TGBeat) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_BEAT));
 		TGString string = ((TGString) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_STRING));
 		TGEffectHarmonic effect = ((TGEffectHarmonic) context.getAttribute(ATTRIBUTE_EFFECT));
-		
+
 		getSongManager(context).getMeasureManager().changeHarmonicNote(measure, beat.getStart(), string.getNumber(), effect);
 	}
 }

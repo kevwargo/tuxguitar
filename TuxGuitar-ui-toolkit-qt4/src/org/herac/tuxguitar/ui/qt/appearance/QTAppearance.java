@@ -14,15 +14,15 @@ import com.trolltech.qt.gui.QPalette;
 public class QTAppearance implements UIAppearance {
 
 	private Map<UIColorAppearance, QColor> colorMap;
-	
+
 	public QTAppearance() {
 		super();
 	}
-	
+
 	public Map<UIColorAppearance, QColor> getColorMap() {
 		if( this.colorMap == null ) {
 			QPalette palette = QApplication.palette();
-			
+
 			this.colorMap = new HashMap<UIColorAppearance, QColor>();
 			this.colorMap.put(UIColorAppearance.WidgetBackground, palette.window().color());
 			this.colorMap.put(UIColorAppearance.WidgetForeground, palette.windowText().color());
@@ -39,11 +39,11 @@ public class QTAppearance implements UIAppearance {
 		}
 		return this.colorMap;
 	}
-	
+
 	public UIColorModel getColorModel(UIColorAppearance colorAppearance) {
 		if( this.getColorMap().containsKey(colorAppearance)) {
 			QColor color = this.getColorMap().get(colorAppearance);
-			
+
 			return new UIColorModel(color.red(), color.green(), color.blue());
 		}
 		return new UIColorModel(0x00, 0x00, 0x00);

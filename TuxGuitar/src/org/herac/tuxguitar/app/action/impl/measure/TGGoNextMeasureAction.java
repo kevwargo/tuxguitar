@@ -11,14 +11,14 @@ import org.herac.tuxguitar.song.models.TGTrack;
 import org.herac.tuxguitar.util.TGContext;
 
 public class TGGoNextMeasureAction extends TGActionBase{
-	
+
 	public static final String NAME = "action.measure.go-next";
-	
+
 	public TGGoNextMeasureAction(TGContext context) {
 		super(context, NAME);
 	}
-	
-	protected void processAction(TGActionContext context){ 
+
+	protected void processAction(TGActionContext context){
 		if( MidiPlayer.getInstance(getContext()).isRunning() ){
 			TGTransport.getInstance(getContext()).gotoNext();
 		}

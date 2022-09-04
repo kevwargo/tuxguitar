@@ -11,37 +11,37 @@ import org.herac.tuxguitar.player.base.MidiSequenceHandler;
 import org.herac.tuxguitar.song.models.TGTimeSignature;
 
 public class MidiSequenceHandlerImpl extends MidiSequenceHandler{
-	
+
 	private List<MidiEvent> events;
 	private GMChannelRouter router;
-	
+
 	public MidiSequenceHandlerImpl(int tracks, GMChannelRouter router){
 		super(tracks);
 		this.router = router;
 		this.events = new ArrayList<MidiEvent>();
 	}
-	
+
 	public void addNoteOff(long tick,int track,int channelId, int note, int velocity, int voice, boolean bendMode) {
 		GMChannelRoute gmChannel = this.router.getRoute(channelId);
 		if( gmChannel != null ){
 			this.events.add(new MidiEvent(MidiMessageUtils.noteOff(resolveChannel(gmChannel,bendMode), note, velocity), tick ));
 		}
 	}
-	
+
 	public void addNoteOn(long tick,int track,int channelId, int note, int velocity, int voice, boolean bendMode) {
 		GMChannelRoute gmChannel = this.router.getRoute(channelId);
 		if( gmChannel != null ){
 			this.events.add(new MidiEvent(MidiMessageUtils.noteOn(resolveChannel(gmChannel,bendMode), note, velocity), tick ));
 		}
 	}
-	
+
 	public void addPitchBend(long tick,int track,int channelId, int value, int voice, boolean bendMode) {
 		GMChannelRoute gmChannel = this.router.getRoute(channelId);
 		if( gmChannel != null ){
 			this.events.add(new MidiEvent(MidiMessageUtils.pitchBend(resolveChannel(gmChannel,bendMode), value), tick ));
 		}
 	}
-	
+
 	public void addControlChange(long tick,int track,int channelId, int controller, int value) {
 		GMChannelRoute gmChannel = this.router.getRoute(channelId);
 		if( gmChannel != null ){
@@ -51,7 +51,7 @@ public class MidiSequenceHandlerImpl extends MidiSequenceHandler{
 			}
 		}
 	}
-	
+
 	public void addProgramChange(long tick,int track,int channelId, int instrument) {
 		GMChannelRoute gmChannel = this.router.getRoute(channelId);
 		if( gmChannel != null ){
@@ -61,23 +61,23 @@ public class MidiSequenceHandlerImpl extends MidiSequenceHandler{
 			}
 		}
 	}
-	
+
 	public void addTempoInUSQ(long tick,int track,int usq) {
 		this.events.add(new MidiEvent(MidiMessageUtils.tempoInUSQ(usq), tick ));
 	}
-	
+
 	public void addTimeSignature(long tick,int track,TGTimeSignature ts) {
 		this.events.add(new MidiEvent(MidiMessageUtils.timeSignature(ts), tick ));
 	}
-	
+
 	public void notifyFinish() {
 		// not implemented
 	}
-	
+
 	public List<MidiEvent> getEvents(){
 		return this.events;
 	}
-	
+
 	private int resolveChannel(GMChannelRoute gmChannel, boolean bendMode){
 		return (bendMode ? gmChannel.getChannel2() : gmChannel.getChannel1());
 	}

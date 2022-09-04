@@ -1,7 +1,7 @@
 package org.herac.tuxguitar.app.system.config;
 
 public class TGConfigKeys {
-	
+
 	public static final String SKIN = "skin";
 	public static final String WINDOW_TITLE = "window.title";
 	public static final String SHOW_SPLASH = "show.splash";
@@ -76,7 +76,7 @@ public class TGConfigKeys {
 	public static final String TABLE_AUTO_SIZE = "table.auto-size";
 	public static final String BROWSER_LINES_VISIBLE = "browser.lines-visible";
 	public static final String FORCE_OS_DEFAULTS = "painter.force-os-defaults";
-	
+
 	public static final String STYLE_MIN_BUFFER_SEPARATOR = "style.minBufferSeparator";
 	public static final String STYLE_MIN_TOP_SPACING = "style.minTopSpacing";
 	public static final String STYLE_MIN_SCORE_TAB_SPACING = "style.minScoreTabSpacing";

@@ -1,7 +1,7 @@
 package org.herac.tuxguitar.player.base;
 
 public class MidiPercussionKey {
-	
+
 	public static final MidiPercussionKey[] PERCUSSION_KEY_LIST = new MidiPercussionKey[]{
 		new MidiPercussionKey(35,"Acoustic Bass Drum"),
 		new MidiPercussionKey(36,"Bass Drum 1"),
@@ -51,19 +51,19 @@ public class MidiPercussionKey {
 		new MidiPercussionKey(80,"Mute Triangle"),
 		new MidiPercussionKey(81,"Open Triangle"),
 	};
-	
+
 	private int value;
 	private String name;
-	
+
 	public MidiPercussionKey(int value,String name){
 		this.value = value;
 		this.name = name;
 	}
-	
+
 	public int getValue(){
 		return this.value;
 	}
-	
+
 	public String getName(){
 		return this.name;
 	}

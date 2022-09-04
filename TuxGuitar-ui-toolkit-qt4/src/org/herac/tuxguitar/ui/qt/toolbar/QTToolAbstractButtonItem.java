@@ -6,13 +6,13 @@ import org.herac.tuxguitar.ui.resource.UIImage;
 import com.trolltech.qt.gui.QAbstractButton;
 
 public class QTToolAbstractButtonItem<T extends QAbstractButton> extends QTToolItem<T> {
-	
+
 	private UIImage image;
-	
+
 	public QTToolAbstractButtonItem(T button, QTToolBar parent) {
 		super(button, parent);
 	}
-	
+
 	public String getText() {
 		return this.getControl().text();
 	}

@@ -10,32 +10,32 @@ import org.herac.tuxguitar.song.models.TGTrack;
 import org.herac.tuxguitar.util.TGContext;
 
 public class TGSetNoteFretNumberAction extends TGActionBase  {
-	
+
 	public static final String NAME_PREFIX = "action.note.general.set-fret-number-";
-	
+
 	private static final int DELAY = 1000;
-	
+
 	private static int lastAddedFret;
 	private static int lastAddedString;
 	private static long lastAddedStart;
 	private static long lastAddedTime;
-	
+
 	private int number;
-	
+
 	public TGSetNoteFretNumberAction(TGContext context, int number){
 		super(context, getActionName(number));
 		this.number = number;
 	}
-	
+
 	protected void processAction(TGActionContext context){
 		TGSong song = (TGSong) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_SONG);
 		TGTrack track = (TGTrack) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_TRACK);
 		TGString string = (TGString) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_STRING);
 		Long start = (Long) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_POSITION);
-		
+
 		int fret = this.number;
 		long time = System.currentTimeMillis();
-		
+
 		if( this.number < 10 ){
 			if( lastAddedStart == start.longValue() && lastAddedString == string.getNumber() ){
 				if( lastAddedFret > 0 && lastAddedFret < 10 && time <  ( lastAddedTime + DELAY ) ){
@@ -50,13 +50,13 @@ public class TGSetNoteFretNumberAction extends TGActionBase  {
 			lastAddedStart = start.longValue();
 			lastAddedString = string.getNumber();
 		}
-		
+
 		context.setAttribute(TGDocumentContextAttributes.ATTRIBUTE_FRET, Integer.valueOf(fret));
-		
+
 		TGActionManager tgActionManager = TGActionManager.getInstance(getContext());
 		tgActionManager.execute(TGChangeNoteAction.NAME, context);
 	}
-	
+
 	public static final String getActionName(int number){
 		return (NAME_PREFIX + number);
 	}

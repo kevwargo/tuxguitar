@@ -180,7 +180,7 @@ public class TGActivity extends AppCompatActivity implements ActivityCompat.OnRe
 		TGContext context = this.findContext();
 		TGThreadManager.getInstance(context).dispose();
 	}
-	
+
 	public void connectPlugins() {
 		TGPluginManager.getInstance(this.context).connectEnabled();
 	}

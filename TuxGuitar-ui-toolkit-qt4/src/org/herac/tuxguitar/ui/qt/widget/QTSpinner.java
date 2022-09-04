@@ -7,12 +7,12 @@ import org.herac.tuxguitar.ui.widget.UISpinner;
 import com.trolltech.qt.gui.QSpinBox;
 
 public class QTSpinner extends QTWidget<QSpinBox> implements UISpinner {
-	
+
 	private QTSelectionListenerManager selectionListener;
-	
+
 	public QTSpinner(QTContainer parent) {
 		super(new QSpinBox(parent.getContainerControl()), parent);
-		
+
 		this.selectionListener = new QTSelectionListenerManager(this);
 	}
 

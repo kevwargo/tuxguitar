@@ -8,17 +8,17 @@ import org.herac.tuxguitar.app.tools.browser.base.TGBrowserSettings;
 import org.herac.tuxguitar.util.TGContext;
 
 public class TGBrowserFactoryImpl implements TGBrowserFactory{
-	
+
 	private TGContext context;
-	
+
 	public TGBrowserFactoryImpl(TGContext context) {
 		this.context = context;
 	}
-	
+
 	public String getType(){
 		return "file.system";
 	}
-	
+
 	public String getName(){
 		return TuxGuitar.getProperty("browser.factory.fs.name");
 	}

@@ -15,13 +15,13 @@ import com.trolltech.qt.gui.QListWidgetItem;
 import com.trolltech.qt.gui.QScrollBar;
 
 public class QTListBoxSelect<T> extends QTWidget<QListWidget> implements UIListBoxSelect<T> {
-	
+
 	private List<UISelectItem<T>> items;
 	private QTSelectionListenerManager selectionListener;
-	
+
 	public QTListBoxSelect(QTContainer parent) {
 		super(new QListWidget(parent.getContainerControl()), parent);
-		
+
 		this.selectionListener = new QTSelectionListenerManager(this);
 		this.items = new ArrayList<UISelectItem<T>>();
 	}
@@ -30,11 +30,11 @@ public class QTListBoxSelect<T> extends QTWidget<QListWidget> implements UIListB
 		UISelectItem<T> selectedItem = this.getSelectedItem();
 		return (selectedItem != null ? selectedItem.getValue() : null);
 	}
-	
+
 	public void setSelectedValue(T value) {
 		this.setSelectedItem(new UISelectItem<T>(null, value));
 	}
-	
+
 	public UISelectItem<T> getSelectedItem() {
 		int index = this.getControl().currentRow();
 		return (index >= 0 && index < this.items.size() ? this.items.get(index) : null);
@@ -49,7 +49,7 @@ public class QTListBoxSelect<T> extends QTWidget<QListWidget> implements UIListB
 		this.items.add(item);
 		this.getControl().addItem(item.getText());
 	}
-	
+
 	public void removeItem(UISelectItem<T> item) {
 		int index = (item != null ? this.items.indexOf(item) : -1);
 		if( index >= 0 && index < this.items.size() ) {
@@ -60,30 +60,30 @@ public class QTListBoxSelect<T> extends QTWidget<QListWidget> implements UIListB
 			}
 		}
 	}
-	
+
 	public void removeItems() {
 		this.items.clear();
 		this.getControl().clear();
 	}
-	
+
 	public int getItemCount() {
 		return this.items.size();
 	}
-	
+
 	@Override
 	public void computePackedSize(Float fixedWidth, Float fixedHeight) {
 		QContentsMargins margins = this.getControl().getContentsMargins();
-		
+
 		float width = (margins.left + margins.right);
 		float height = (margins.top + margins.bottom);
-		
+
 		if(!this.items.isEmpty() ) {
 			width += (this.getControl().sizeHintForColumn(0));
 			for(int i = 0; i < this.items.size(); i ++) {
 				height += this.getControl().sizeHintForRow(i);
 			}
 		}
-		
+
 		QScrollBar vScroll = this.getControl().verticalScrollBar();
 		if( vScroll != null && vScroll.isEnabled()) {
 			width += vScroll.sizeHint().width();
@@ -96,7 +96,7 @@ public class QTListBoxSelect<T> extends QTWidget<QListWidget> implements UIListB
 		}
 		this.setPackedSize(new UISize(width, height));
 	}
-	
+
 	public void addSelectionListener(UISelectionListener listener) {
 		if( this.selectionListener.isEmpty() ) {
 			this.getControl().currentRowChanged.connect(this.selectionListener, QTSelectionListenerManager.SIGNAL_METHOD);

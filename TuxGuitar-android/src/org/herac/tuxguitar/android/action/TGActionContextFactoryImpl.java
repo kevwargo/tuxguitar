@@ -10,20 +10,20 @@ import org.herac.tuxguitar.document.TGDocumentManager;
 import org.herac.tuxguitar.util.TGContext;
 
 public class TGActionContextFactoryImpl implements TGActionContextFactory{
-	
+
 	private TGContext context;
-	
+
 	public TGActionContextFactoryImpl(TGContext context) {
 		this.context = context;
 	}
-	
+
 	public TGActionContext createActionContext() throws TGActionException {
 		TGActionContext tgActionContext = new TGActionContextImpl();
-		
+
 		TGDocumentManager tgDocumentManager = TGDocumentManager.getInstance(this.context);
 		tgActionContext.setAttribute(TGDocumentContextAttributes.ATTRIBUTE_SONG_MANAGER, tgDocumentManager.getSongManager());
 		tgActionContext.setAttribute(TGDocumentContextAttributes.ATTRIBUTE_SONG, tgDocumentManager.getSong());
-		
+
 		TGSongViewController tgSongView = TGSongViewController.getInstance(this.context);
 		if( tgSongView != null ) {
 			TGCaret tgCaret = tgSongView.getCaret();

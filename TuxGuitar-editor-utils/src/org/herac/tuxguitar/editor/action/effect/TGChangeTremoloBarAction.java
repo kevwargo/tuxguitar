@@ -10,21 +10,21 @@ import org.herac.tuxguitar.song.models.effects.TGEffectTremoloBar;
 import org.herac.tuxguitar.util.TGContext;
 
 public class TGChangeTremoloBarAction extends TGActionBase {
-	
+
 	public static final String NAME = "action.note.effect.change-tremolo-bar";
 
 	public static final String ATTRIBUTE_EFFECT = TGEffectTremoloBar.class.getName();
-	
+
 	public TGChangeTremoloBarAction(TGContext context) {
 		super(context, NAME);
 	}
-	
+
 	protected void processAction(TGActionContext context){
 		TGMeasure measure = ((TGMeasure) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_MEASURE));
 		TGBeat beat = ((TGBeat) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_BEAT));
 		TGString string = ((TGString) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_STRING));
 		TGEffectTremoloBar effect = ((TGEffectTremoloBar) context.getAttribute(ATTRIBUTE_EFFECT));
-		
+
 		getSongManager(context).getMeasureManager().changeTremoloBar(measure, beat.getStart(), string.getNumber(), effect);
 	}
 }

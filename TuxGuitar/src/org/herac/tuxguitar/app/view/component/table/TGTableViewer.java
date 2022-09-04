@@ -55,7 +55,7 @@ import org.herac.tuxguitar.util.singleton.TGSingletonFactory;
 import org.herac.tuxguitar.util.singleton.TGSingletonUtil;
 
 public class TGTableViewer implements TGEventListener {
-	
+
 	private TGContext context;
 	private UIScrollBarPanel composite;
 	private UIScrollBar hScroll;
@@ -78,20 +78,20 @@ public class TGTableViewer implements TGEventListener {
 	private boolean followScroll;
 	private boolean resetTexts;
 	private boolean resetColors;
-	
+
 	public TGTableViewer(TGContext context) {
 		this.context = context;
 		this.createSyncProcesses();
 		this.addListeners();
 	}
-	
+
 	public void addListeners() {
 		TuxGuitar.getInstance().getLanguageManager().addLoader(this);
 		TuxGuitar.getInstance().getEditorManager().addRedrawListener(this);
 		TuxGuitar.getInstance().getEditorManager().addUpdateListener(this);
 		TuxGuitar.getInstance().getSkinManager().addLoader(this);
 	}
-	
+
 	public void init(UIContainer parent){
 		this.composite = this.getUIFactory().createScrollBarPanel(parent, true, true, true);
 		this.addColorModel();
@@ -101,11 +101,11 @@ public class TGTableViewer implements TGEventListener {
 		this.addVScroll();
 		this.loadConfig();
 	}
-	
+
 	private void addLayout(){
 		getControl().setLayout(new UIScrollBarPanelLayout(false, true, true, true, false, false));
 	}
-	
+
 	private void addHScroll(){
 		this.hScroll = getControl().getHScroll();
 		this.hScroll.addSelectionListener(new UISelectionListener() {
@@ -114,7 +114,7 @@ public class TGTableViewer implements TGEventListener {
 			}
 		});
 	}
-	
+
 	private void addVScroll(){
 		this.vScroll = getControl().getVScroll();
 		this.vScroll.addSelectionListener(new UISelectionListener() {
@@ -123,7 +123,7 @@ public class TGTableViewer implements TGEventListener {
 			}
 		});
 	}
-	
+
 	private void addTable(){
 		UIMouseUpListener listener = mouseFocusListener();
 		this.table = new TGTable(this.context, getControl());
@@ -134,7 +134,7 @@ public class TGTableViewer implements TGEventListener {
 		this.table.getColumnCanvas().getControl().addMouseUpListener(listener);
 		this.table.getColumnCanvas().getLabel().addMouseDoubleClickListener(new TGActionProcessorListener(this.context, TGOpenSongInfoDialogAction.NAME));
 		this.table.getColumnCanvas().getControl().addMouseDoubleClickListener(new TGActionProcessorListener(this.context, TGOpenSongInfoDialogAction.NAME));
-		
+
 		this.table.getColumnCanvas().getControl().addResizeListener(new UIResizeListener() {
 			public void onResize(UIResizeEvent event) {
 				TGTableViewer.this.updateHScroll();
@@ -143,11 +143,11 @@ public class TGTableViewer implements TGEventListener {
 		this.fireUpdate(true);
 		this.loadProperties();
 	}
-	
+
 	private void addColorModel(){
 		this.colorModel = new TGTableColorModel();
 	}
-	
+
 	public void loadProperties() {
 		this.table.getColumnNumber().setTitle(TuxGuitar.getProperty("track.number"));
 		this.table.getColumnSoloMute().setTitle(TuxGuitar.getProperty("track.short-solo-mute"));
@@ -155,23 +155,23 @@ public class TGTableViewer implements TGEventListener {
 		this.table.getColumnInstrument().setTitle(TuxGuitar.getProperty("track.instrument"));
 		this.loadMenuProperties();
 	}
-	
+
 	public void loadIcons() {
 		this.loadMenuIcons();
 	}
-	
+
 	public void fireUpdate(boolean newSong){
 		this.update = true;
 		if( newSong ){
 			this.trackCount = 0;
 		}
 	}
-	
+
 	public void updateItems(){
 		this.resetTexts = true;
 		this.followScroll = true;
 	}
-	
+
 	public void updateHScroll(){
 		int width = Math.round(getEditor().getTablature().getCaret().getTrack().countMeasures() * this.table.getRowHeight());
 		int canvasWidth = Math.round(this.table.getColumnCanvas().getControl().getBounds().getWidth());
@@ -179,35 +179,35 @@ public class TGTableViewer implements TGEventListener {
 		this.hScroll.setMaximum(Math.max((width - canvasWidth), 0));
 		this.hScroll.setThumb(canvasWidth);
 	}
-	
+
 	public void updateVScroll(){
 		this.vScroll.setIncrement(Math.round(this.table.getRowHeight()));
 	}
-	
+
 	public TGContext getContext() {
 		return context;
 	}
-	
+
 	public TGTable getTable(){
 		return this.table;
 	}
-	
+
 	public TGTableColorModel getColorModel() {
 		return this.colorModel;
 	}
-	
+
 	public int getHScrollSelection(){
 		return this.hScroll.getValue();
 	}
-	
+
 	public UIFactory getUIFactory() {
 		return TGApplication.getInstance(this.context).getFactory();
 	}
-	
+
 	public TablatureEditor getEditor(){
 		return TuxGuitar.getInstance().getTablatureEditor();
 	}
-	
+
 	private String getInstrument(TGTrack track){
 		TGSong song = TuxGuitar.getInstance().getDocumentManager().getSong();
 		TGChannel channel = TuxGuitar.getInstance().getSongManager().getChannel(song, track.getChannelId());
@@ -216,7 +216,7 @@ public class TGTableViewer implements TGEventListener {
 		}
 		return new String();
 	}
-	
+
 	private String getSoloMute(TGTrack track){
 		if( track.isSolo() ){
 			return TuxGuitar.getProperty("track.short-solo-mute.s");
@@ -226,11 +226,11 @@ public class TGTableViewer implements TGEventListener {
 		}
 		return TuxGuitar.getProperty("track.short-solo-mute.none");
 	}
-	
+
 	private void updateTable(){
 		if( this.update ){
 			this.updateTableMenu();
-			
+
 			TGSong song = TuxGuitar.getInstance().getDocumentManager().getSong();
 			int count = song.countTracks();
 			this.table.removeRowsAfter(count);
@@ -243,16 +243,16 @@ public class TGTableViewer implements TGEventListener {
 				if(row != null){
 					//Number
 					this.updateTableRow(row.getNumber(), track, Integer.toString(track.getNumber()));
-					
+
 					//Solo-Mute
 					this.updateTableRow(row.getSoloMute(), track, getSoloMute(track));
-					
+
 					//Name
 					this.updateTableRow(row.getName(), track, track.getName());
-					
+
 					//Instrument
 					this.updateTableRow(row.getInstrument(), track, getInstrument(track));
-					
+
 					row.setMouseUpListenerLabel(new UIMouseUpListener() {
 						public void onMouseUp(UIMouseEvent event) {
 							row.getPainter().setFocus();
@@ -283,7 +283,7 @@ public class TGTableViewer implements TGEventListener {
 							tgActionProcessor.process();
 						}
 					});
-					
+
 					row.setMouseUpListenerCanvas(new UIMouseUpListener() {
 						public void onMouseUp(UIMouseEvent event) {
 							row.getPainter().setFocus();
@@ -310,16 +310,16 @@ public class TGTableViewer implements TGEventListener {
 							}).process();
 						}
 					});
-					
+
 					row.setPaintListenerCanvas(new TGTableCanvasPainter(this,track));
 				}
 			}
-			
+
 			this.table.update();
 			this.selectedTrack = 0;
 			this.selectedMeasure = 0;
 			this.updateVScroll();
-			
+
 			if(!this.resizeTable(count) && this.trackCount != count) {
 				this.getControl().layout();
 			}
@@ -327,7 +327,7 @@ public class TGTableViewer implements TGEventListener {
 		}
 		this.update = false;
 	}
-	
+
 	private boolean resizeTable(int trackCount) {
 		UIWindow uiWindow = TGWindow.getInstance(this.context).getWindow();
 		if(!this.autoSizeEnabled ) {
@@ -345,52 +345,52 @@ public class TGTableViewer implements TGEventListener {
 		}
 		return false;
 	}
-	
+
 	private void updateTableRow(TGTableRowCell cell, TGTrack track, String label) {
 		cell.setText(label);
 		cell.setData(TGTrack.class.getName(), track);
 		cell.setMenu((UIPopupMenu) this.menu.getMenu());
 	}
-	
+
 	private void updateTableMenu() {
 		this.disposeMenu();
 		this.createTrackMenu();
 	}
-	
+
 	private void updateMenuItems() {
 		if( this.menu != null && !this.menu.isDisposed() ) {
 			this.menu.update();
 		}
 	}
-	
+
 	private void loadMenuProperties() {
 		if( this.menu != null && !this.menu.isDisposed() ) {
 			this.menu.loadProperties();
 		}
 	}
-	
+
 	private void loadMenuIcons() {
 		if( this.menu != null && !this.menu.isDisposed() ) {
 			this.menu.loadIcons();
 		}
 	}
-	
+
 	private void resetTextsValues(){
 		int rows = this.table.getRowCount();
 		for(int i = 0; i < rows; i ++){
 			TGTableRow row = this.table.getRow(i);
-			
+
 			row.getNumber().setText(Integer.toString(((TGTrack)row.getNumber().getData(TGTrack.class.getName())).getNumber()));
 			row.getSoloMute().setText(getSoloMute((TGTrack)row.getSoloMute().getData(TGTrack.class.getName())));
 			row.getName().setText(((TGTrack)row.getName().getData(TGTrack.class.getName())).getName());
 			row.getInstrument().setText(getInstrument((TGTrack)row.getInstrument().getData(TGTrack.class.getName())));
 		}
 	}
-	
+
 	private List<UIResource> resetColors() {
 		if( this.resetColors || this.backgrounds == null || this.foregrounds == null) {
 			this.resetColors = false;
-			
+
 			List<UIResource> disposableResources = new ArrayList<UIResource>();
 			if( this.backgrounds != null ) {
 				for(UIColor uiColor : this.backgrounds) {
@@ -402,31 +402,31 @@ public class TGTableViewer implements TGEventListener {
 					disposableResources.add(uiColor);
 				}
 			}
-			
+
 			this.backgrounds = this.colorModel.createBackgrounds(this.context);
 			this.foregrounds = this.colorModel.createForegrounds(this.context);
 		}
 		return null;
 	}
-	
+
 	private void redrawRows(int selectedTrack) {
 		List<UIResource> disposableResources = this.resetColors();
-		
+
 		int rows = this.table.getRowCount();
 		for(int i = 0; i < rows; i ++){
-			TGTableRow row = this.table.getRow(i); 
+			TGTableRow row = this.table.getRow(i);
 			row.getPainter().redraw();
 			if(this.selectedTrack != selectedTrack){
 				row.setBgColor( this.backgrounds[ ((selectedTrack - 1) == i) ? 2: ( i % 2 ) ] );
 				row.setFgColor( this.foregrounds[ ((selectedTrack - 1) == i) ? 2: ( i % 2 ) ] );
 			}
 		}
-		
+
 		if( disposableResources != null ) {
 			this.disposeResources(disposableResources.toArray(new UIResource[disposableResources.size()]));
 		}
 	}
-	
+
 	public void redraw() {
 		if(!isDisposed()){
 			this.updateTable();
@@ -436,7 +436,7 @@ public class TGTableViewer implements TGEventListener {
 			this.selectedTrack = selectedTrack;
 			this.selectedMeasure = 0;
 			this.updateHScroll();
-			
+
 			if( this.resetTexts ){
 				this.resetTextsValues();
 				this.resetTexts = false;
@@ -448,7 +448,7 @@ public class TGTableViewer implements TGEventListener {
 			getControl().redraw();
 		}
 	}
-	
+
 	public void redrawPlayingMode(){
 		if(!isDisposed()){
 			TGMeasure measure =  TGTransport.getInstance(this.context).getCache().getPlayMeasure();
@@ -465,14 +465,14 @@ public class TGTableViewer implements TGEventListener {
 			}
 		}
 	}
-	
+
 	private void followHorizontalScroll(int selectedMeasure){
 		int hScrollSelection = this.hScroll.getValue();
 		int hScrollThumb = this.hScroll.getThumb();
-		
+
 		float measureSize = this.table.getRowHeight();
 		float measurePosition = ((selectedMeasure * measureSize) - measureSize);
-		
+
 		if((measurePosition - hScrollSelection) < 0 ){
 			this.hScroll.setValue(Math.max(Math.round(measurePosition), 0));
 		}
@@ -480,44 +480,44 @@ public class TGTableViewer implements TGEventListener {
 			this.hScroll.setValue(Math.max(Math.round(measurePosition + measureSize - hScrollThumb), 0));
 		}
 	}
-	
+
 	public void loadConfig() {
 		this.autoSizeEnabled = TuxGuitar.getInstance().getConfig().getBooleanValue(TGConfigKeys.TABLE_AUTO_SIZE);
 		this.colorModel.resetColors(this.context);
 		this.resetColors = true;
 		this.trackCount = 0;
 	}
-	
+
 	public UIScrollBarPanel getControl() {
 		return this.composite;
 	}
-	
+
 	public void createTrackMenu() {
 		this.menu = new TrackMenu(this.getUIFactory().createPopupMenu(TGWindow.getInstance(this.context).getWindow()));
 		this.menu.showItems();
 		this.menu.update();
 	}
-	
+
 	public void disposeColors() {
 		this.disposeResources(this.backgrounds);
 		this.disposeResources(this.foregrounds);
 		this.backgrounds = null;
 		this.foregrounds = null;
 	}
-	
+
 	public void disposeMenu() {
 		if( this.menu != null && !this.menu.isDisposed() ) {
 			this.menu.dispose();
 			this.menu = null;
 		}
 	}
-	
+
 	public void disposeResources(UIResource[] resources) {
 		for(int i = 0; i < resources.length; i++){
 			resources[i].dispose();
 		}
 	}
-	
+
 	public void dispose(){
 		if(!this.isDisposed()){
 			this.getControl().dispose();
@@ -525,15 +525,15 @@ public class TGTableViewer implements TGEventListener {
 			this.disposeColors();
 		}
 	}
-	
+
 	public boolean isDisposed(){
 		return (getControl() == null || getControl().isDisposed());
 	}
-	
+
 	protected int getSelectedTrack(){
 		return this.selectedTrack;
 	}
-	
+
 	public void createSyncProcesses() {
 		this.redrawProcess = new TGSyncProcessLocked(this.context, new Runnable() {
 			public void run() {
@@ -561,7 +561,7 @@ public class TGTableViewer implements TGEventListener {
 			}
 		});
 	}
-	
+
 	private UIMouseUpListener mouseFocusListener(){
 		return new UIMouseUpListener() {
 			public void onMouseUp(UIMouseEvent event) {
@@ -584,7 +584,7 @@ public class TGTableViewer implements TGEventListener {
 			this.redrawPlayModeProcess.process();
 		}
 	}
-	
+
 	public void processUpdateEvent(TGEvent event) {
 		int type = ((Integer)event.getAttribute(TGUpdateEvent.PROPERTY_UPDATE_MODE)).intValue();
 		if( type == TGUpdateEvent.SELECTION ){
@@ -596,7 +596,7 @@ public class TGTableViewer implements TGEventListener {
 			this.fireUpdate( true );
 		}
 	}
-	
+
 	public void processEvent(TGEvent event) {
 		if( TGRedrawEvent.EVENT_TYPE.equals(event.getEventType()) ) {
 			this.processRedrawEvent(event);
@@ -611,7 +611,7 @@ public class TGTableViewer implements TGEventListener {
 			this.loadIconsProcess.process();
 		}
 	}
-	
+
 	public static TGTableViewer getInstance(TGContext context) {
 		return TGSingletonUtil.getInstance(context, TGTableViewer.class.getName(), new TGSingletonFactory<TGTableViewer>() {
 			public TGTableViewer createInstance(TGContext context) {

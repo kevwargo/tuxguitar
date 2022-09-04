@@ -5,7 +5,7 @@ import org.herac.tuxguitar.ui.resource.UIKey;
 import org.herac.tuxguitar.ui.resource.UIKeyCombination;
 
 public class SWTKey {
-	
+
 	private static final SWTKeyMap[] KEY_MAP = new SWTKeyMap[] {
 		new SWTKeyMap(SWT.F1, UIKey.F1),
 		new SWTKeyMap(SWT.F2, UIKey.F2),
@@ -42,7 +42,7 @@ public class SWTKey {
 		new SWTKeyMap(0x1000003, UIKey.LEFT),
 		new SWTKeyMap(0x1000004, UIKey.RIGHT)
 	};
-	
+
 	public UIKey getKey(int keyCode) {
 		for(SWTKeyMap keyMap : KEY_MAP) {
 			if( keyMap.getCode() == keyCode ) {
@@ -51,7 +51,7 @@ public class SWTKey {
 		}
 		return new UIKey(Character.toString((char) (keyCode & 0xffff)));
 	}
-	
+
 	public UIKeyCombination getCombination(int keyCode, int stateMask) {
 		UIKeyCombination keyCombination = new UIKeyCombination();
 		if((stateMask & keyCode) == 0) {
@@ -68,29 +68,29 @@ public class SWTKey {
 				keyCombination.getKeys().add(UIKey.COMMAND);
 			}
 		}
-		
+
 		UIKey principalKey = this.getKey(keyCode);
 		if(!keyCombination.contains(principalKey)) {
 			keyCombination.getKeys().add(principalKey);
 		}
-		
+
 		return keyCombination;
 	}
-	
+
 	private static class SWTKeyMap {
-		
+
 		private int code;
 		private UIKey key;
-		
+
 		public SWTKeyMap(int code, UIKey key) {
 			this.code = code;
 			this.key = key;
 		}
-		
+
 		public int getCode() {
 			return this.code;
 		}
-		
+
 		public UIKey getKey() {
 			return this.key;
 		}

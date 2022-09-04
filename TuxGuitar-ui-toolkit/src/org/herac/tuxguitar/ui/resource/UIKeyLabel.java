@@ -1,7 +1,7 @@
 package org.herac.tuxguitar.ui.resource;
 
 public class UIKeyLabel {
-	
+
 	public static final int F1 = (0x100000a);
 	public static final int F2 = (0x100000b);
 	public static final int F3 = (0x100000c);
@@ -35,7 +35,7 @@ public class UIKeyLabel {
 	public static final int DOWN = (0x1000002);
 	public static final int LEFT = (0x1000003);
 	public static final int RIGHT = (0x1000004);
-	
+
 	public static final UIKeyLabel[] LABELS = new UIKeyLabel[] {
 		new UIKeyLabel(F1, "F1"),
 		new UIKeyLabel(F2, "F2"),
@@ -71,22 +71,22 @@ public class UIKeyLabel {
 		new UIKeyLabel(ALT,"Alt"),
 		new UIKeyLabel(COMMAND,"\u2318"),
 	};
-	
+
 	private int key;
 	private String label;
-	
+
 	public UIKeyLabel(int key, String label){
 		this.key = key;
 		this.label = label;
 	}
-	
+
 	public int getKey(){
 		return this.key;
 	}
-	
+
 	public String getLabel(){
 		return this.label;
 	}
-	
-	
+
+
 }

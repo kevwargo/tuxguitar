@@ -6,17 +6,17 @@ import org.herac.tuxguitar.ui.swt.event.SWTSelectionListenerManager;
 import org.herac.tuxguitar.ui.widget.UIScrollBar;
 
 public class SWTScrollBar extends SWTEventReceiver<ScrollBar> implements UIScrollBar {
-	
+
 	private Integer thumb;
 	private Integer maximum;
 	private Integer minimum;
 	private Integer increment;
-	
+
 	private SWTSelectionListenerManager selectionListener;
-	
+
 	public SWTScrollBar(ScrollBar control) {
 		super(control);
-		
+
 		this.selectionListener = new SWTSelectionListenerManager(this);
 	}
 
@@ -27,7 +27,7 @@ public class SWTScrollBar extends SWTEventReceiver<ScrollBar> implements UIScrol
 	public boolean isDisposed() {
 		return this.getControl().isDisposed();
 	}
-	
+
 	public void setValue(int value) {
 		this.getControl().setSelection(value);
 	}
@@ -35,7 +35,7 @@ public class SWTScrollBar extends SWTEventReceiver<ScrollBar> implements UIScrol
 	public int getValue() {
 		return this.getControl().getSelection();
 	}
-	
+
 	public boolean isEnabled() {
 		return this.getControl().isEnabled();
 	}
@@ -51,7 +51,7 @@ public class SWTScrollBar extends SWTEventReceiver<ScrollBar> implements UIScrol
 	public void setVisible(boolean visible) {
 		this.getControl().setVisible(visible);
 	}
-	
+
 	public void setMaximum(int maximum) {
 		this.maximum = maximum;
 		this.updateRangeValues();
@@ -78,16 +78,16 @@ public class SWTScrollBar extends SWTEventReceiver<ScrollBar> implements UIScrol
 	public int getIncrement() {
 		return (this.increment != null ? this.increment : -1);
 	}
-	
+
 	public void setThumb(int thumb) {
 		this.thumb = thumb;
 		this.updateRangeValues();
 	}
-	
+
 	public int getThumb() {
 		return (this.thumb != null ? this.thumb : -1);
 	}
-	
+
 	public void updateRangeValues() {
 		if( this.increment != null ) {
 			this.getControl().setIncrement(this.increment);
@@ -102,7 +102,7 @@ public class SWTScrollBar extends SWTEventReceiver<ScrollBar> implements UIScrol
 			this.getControl().setThumb(this.thumb);
 		}
 	}
-	
+
 	public void addSelectionListener(UISelectionListener listener) {
 		if( this.selectionListener.isEmpty() ) {
 			this.getControl().addSelectionListener(this.selectionListener);

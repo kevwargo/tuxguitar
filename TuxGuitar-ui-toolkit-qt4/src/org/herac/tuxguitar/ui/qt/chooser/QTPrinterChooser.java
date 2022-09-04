@@ -12,11 +12,11 @@ import com.trolltech.qt.gui.QPrinter;
 public class QTPrinterChooser implements UIPrinterChooser {
 
 	private QTAbstractWindow<?> window;
-	
+
 	public QTPrinterChooser(QTAbstractWindow<?> window) {
 		this.window = window;
 	}
-	
+
 	public void choose(UIPrinterChooserHandler selectionHandler) {
 		QTPrinter selection = null;
 		QPrintDialog dialog = new QPrintDialog(this.window.getControl());

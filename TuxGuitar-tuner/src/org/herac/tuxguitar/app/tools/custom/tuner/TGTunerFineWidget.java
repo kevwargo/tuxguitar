@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.herac.tuxguitar.app.tools.custom.tuner;
 
@@ -24,9 +24,9 @@ import org.herac.tuxguitar.util.TGContext;
  *
  */
 public class TGTunerFineWidget {
-	
+
 	private static final float BOTTOM_Y = 10.0f;
-	
+
 	private TGContext context;
 	private UIPanel panel;
 	private UICanvas composite = null;
@@ -38,17 +38,17 @@ public class TGTunerFineWidget {
 
 	public TGTunerFineWidget(TGContext context, UIFactory factory, UILayoutContainer parent) {
 		this.context = context;
-		
+
 		this.init(factory, parent);
 	}
 
 	private void init(final UIFactory factory, UILayoutContainer parent) {
 		UITableLayout layout = new UITableLayout();
-		
+
 		this.panel = factory.createPanel(parent, false);
 		this.panel.setLayout(layout);
 		this.panel.setEnabled(false);
-		
+
 		this.composite = factory.createCanvas(this.panel, true);
 		this.composite.setBgColor(TGColorManager.getInstance(this.context).getColor(TGColorManager.COLOR_WHITE));
 		this.composite.addPaintListener(new UIPaintListener() {
@@ -57,18 +57,18 @@ public class TGTunerFineWidget {
 			}
 		});
 		layout.set(this.composite, 1, 1, UITableLayout.ALIGN_FILL, UITableLayout.ALIGN_FILL, true, true);
-		
+
 		this.letterFont = factory.createFont(TGConfigManager.getInstance(this.context).getFontModelConfigValue(TGConfigKeys.MATRIX_FONT).getName(), 14, true, false);
 	}
-	
-	
+
+
 	public void paintWidget(UIPainter painter) {
 		TGColorManager colorManager = TGColorManager.getInstance(this.context);
-		
+
 		UIRectangle compositeSize = this.composite.getBounds();
-		
+
 		// margins & stuff
-		
+
 		painter.setForeground(colorManager.getColor(TGColorManager.COLOR_BLACK));
 		painter.initPath();
 		painter.setLineWidth(2);
@@ -81,7 +81,7 @@ public class TGTunerFineWidget {
 		painter.moveTo(compositeSize.getWidth()/2-height, compositeSize.getHeight()-BOTTOM_Y);
 		painter.lineTo(compositeSize.getWidth()/2+height, compositeSize.getHeight()-BOTTOM_Y);
 		painter.closePath();
-		
+
 		if (this.panel.isEnabled()) {
 			// tone name
 			painter.setForeground(colorManager.getColor(TGColorManager.COLOR_BLUE));
@@ -98,21 +98,21 @@ public class TGTunerFineWidget {
 			painter.closePath();
 			}
 		}
-		
-		
-		
-	
+
+
+
+
 	}
-	
-	
+
+
 	public void setWantedTone(int tone) {
 		this.panel.setEnabled(true);
 		this.currentNoteValue = tone;
 		this.currentNoteString = TGTunerRoughWidget.TONESSTRING[tone%12]+(int)Math.floor(tone/12);
 		this.redraw();
-		
+
 	}
-	
+
 	public void setCurrentFrequency(double freq) {
 		this.currentFrequency = freq;
 		this.redraw();
@@ -121,16 +121,16 @@ public class TGTunerFineWidget {
 	public void redraw() {
 		this.composite.redraw();
 	}
-	
+
 	protected double getAngleRad() {
 		return Math.PI*( 1 - (this.stickDistance(this.getTone(this.currentFrequency) - this.currentNoteValue) + this.FINE_TUNING_RANGE  )/(2*this.FINE_TUNING_RANGE) );
 	}
 
-	
+
 	private float getTone(double frequency) {
 		return (float)(45+12*(Math.log(frequency/110)/Math.log(2)));
 	}
-	
+
 	private double stickDistance(double diff) {
 		if (Math.abs(diff) > this.FINE_TUNING_RANGE)
 			if (diff > 0)
@@ -143,7 +143,7 @@ public class TGTunerFineWidget {
 	public UIControl getControl() {
 		return this.panel;
 	}
-	
+
 	public boolean isDisposed() {
 		return (this.panel == null || this.panel.isDisposed());
 	}

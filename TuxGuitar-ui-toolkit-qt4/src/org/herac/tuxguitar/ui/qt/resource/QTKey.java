@@ -9,7 +9,7 @@ import com.trolltech.qt.core.Qt.KeyboardModifiers;
 import com.trolltech.qt.gui.QKeyEvent;
 
 public class QTKey {
-	
+
 	private static final QTKeyMap[] KEY_MAP = new QTKeyMap[] {
 		new QTKeyMap(Key.Key_F1, UIKey.F1),
 		new QTKeyMap(Key.Key_F2, UIKey.F2),
@@ -54,7 +54,7 @@ public class QTKey {
 		new QTKeyMap(Key.Key_Less, new UIKey("<")),
 		new QTKeyMap(Key.Key_Greater, new UIKey(">"))
 	};
-	
+
 	public static UIKey getKey(QKeyEvent keyEvent) {
 		int keyCode = keyEvent.key();
 		for(QTKeyMap keyMap : KEY_MAP) {
@@ -62,13 +62,13 @@ public class QTKey {
 				return keyMap.getKey();
 			}
 		}
-		
+
 		return new UIKey(Character.toString((char) (keyEvent.key() & 0xffff)).toLowerCase());
 	}
-	
+
 	public static UIKeyCombination getCombination(QKeyEvent keyEvent) {
 		UIKeyCombination keyCombination = new UIKeyCombination();
-		
+
 		KeyboardModifiers modifiers = keyEvent.modifiers();
 		if( modifiers.isSet(KeyboardModifier.AltModifier)) {
 			keyCombination.getKeys().add(UIKey.ALT);
@@ -82,29 +82,29 @@ public class QTKey {
 		if( modifiers.isSet(KeyboardModifier.MetaModifier)) {
 			keyCombination.getKeys().add(UIKey.COMMAND);
 		}
-		
+
 		UIKey principalKey = QTKey.getKey(keyEvent);
 		if(!keyCombination.contains(principalKey)) {
 			keyCombination.getKeys().add(principalKey);
 		}
-		
+
 		return keyCombination;
 	}
-	
+
 	private static class QTKeyMap {
-		
+
 		private Key code;
 		private UIKey key;
-		
+
 		public QTKeyMap(Key code, UIKey key) {
 			this.code = code;
 			this.key = key;
 		}
-		
+
 		public Key getCode() {
 			return this.code;
 		}
-		
+
 		public UIKey getKey() {
 			return this.key;
 		}

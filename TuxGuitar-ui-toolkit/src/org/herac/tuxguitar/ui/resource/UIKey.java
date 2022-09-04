@@ -1,7 +1,7 @@
 package org.herac.tuxguitar.ui.resource;
 
 public class UIKey {
-	
+
 	public static final UIKey F1 = new UIKey("F1");
 	public static final UIKey F2 = new UIKey("F2");
 	public static final UIKey F3 = new UIKey("F3");
@@ -35,24 +35,24 @@ public class UIKey {
 	public static final UIKey DOWN = new UIKey("Down");
 	public static final UIKey LEFT = new UIKey("Left");
 	public static final UIKey RIGHT = new UIKey("Right");
-	
+
 	private String code;
-	
+
 	public UIKey(String code) {
 		this.code = code;
 	}
-	
+
 	public String toString() {
 		return this.code;
 	}
-	
+
 	public boolean equals(Object o) {
 		if( o instanceof UIKey ) {
 			return (this.hashCode() == o.hashCode());
 		}
 		return false;
 	}
-	
+
 	public int hashCode() {
 		if( this.code != null ) {
 			return (UIKey.class.getName() + "-" + this.code).hashCode();

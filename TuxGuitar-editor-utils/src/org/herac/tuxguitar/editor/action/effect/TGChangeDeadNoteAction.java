@@ -13,13 +13,13 @@ import org.herac.tuxguitar.song.models.TGVoice;
 import org.herac.tuxguitar.util.TGContext;
 
 public class TGChangeDeadNoteAction extends TGActionBase {
-	
+
 	public static final String NAME = "action.note.effect.change-dead";
-	
+
 	public TGChangeDeadNoteAction(TGContext context) {
 		super(context, NAME);
 	}
-	
+
 	protected void processAction(TGActionContext context){
 		TGSongManager songManager = getSongManager(context);
 		TGMeasure measure = ((TGMeasure) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_MEASURE));
@@ -29,15 +29,15 @@ public class TGChangeDeadNoteAction extends TGActionBase {
 		TGDuration duration = ((TGDuration) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_DURATION));
 		TGString string = ((TGString) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_STRING));
 		int velocity = ((Integer) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_VELOCITY)).intValue();
-		
+
 		if( note == null ){
 			note = songManager.getFactory().newNote();
 			note.setValue(0);
 			note.setVelocity(velocity);
 			note.setString(string.getNumber());
-			
+
 			TGDuration noteDuration = duration.clone(songManager.getFactory());
-						
+
 			songManager.getMeasureManager().addNote(measure, beat.getStart(), note, noteDuration, voice.getIndex());
 		}
 		songManager.getMeasureManager().changeDeadNote(note);

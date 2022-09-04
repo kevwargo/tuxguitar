@@ -9,20 +9,20 @@ import org.herac.tuxguitar.song.models.TGString;
 import org.herac.tuxguitar.util.TGContext;
 
 public class TGChangeTappingAction extends TGActionBase {
-	
+
 	public static final String NAME = "action.note.effect.change-tapping";
-	
+
 	public static final String ATTRIBUTE_STRING = TGString.class.getName();
-	
+
 	public TGChangeTappingAction(TGContext context) {
 		super(context, NAME);
 	}
-	
+
 	protected void processAction(TGActionContext context){
 		TGMeasure measure = ((TGMeasure) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_MEASURE));
 		TGBeat beat = ((TGBeat) context.getAttribute(TGDocumentContextAttributes.ATTRIBUTE_BEAT));
 		TGString string = ((TGString) context.getAttribute(ATTRIBUTE_STRING));
-		
+
 		getSongManager(context).getMeasureManager().changeTapping(measure, beat.getStart(), string.getNumber());
 	}
 }
